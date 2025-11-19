@@ -37,7 +37,6 @@ This allows more complex data relationships and efficient solutions to problems 
 | Traversal | One path (start to end) | Multiple paths possible |
 | Example Structures | Array, LinkedList, ArrayList | Tree, Binary Tree, Graph |
 | Use Case | Storing ordered data | Representing relationships |
-
 ```mermaid
 graph LR
     subgraph Linear["Linear Structure (Array/List)"]
@@ -79,9 +78,9 @@ graph LR
 A **Tree** is a non-linear data structure that represents data in a **hierarchical** manner. It is made up of **nodes** connected by **edges**. Each node can have **zero or more child nodes**, forming parent–child relationships.
 
 Think of a tree like a **family tree** or a **folder structure** on your computer:
-- The **root** is the starting point (e.g., “C Drive”).
+- The **root** is the starting point (e.g., "C Drive").
 - Each **folder** can contain subfolders (children).
-- The **leaves** are folders or files that don’t have anything inside.
+- The **leaves** are folders or files that don't have anything inside.
 
 ---
 
@@ -102,9 +101,8 @@ Think of a tree like a **family tree** or a **folder structure** on your compute
 ###  Visual Representation
 
 Here's an example of a simple tree representing an organization structure:
-
-
 ```mermaid
+
 graph TD
     CEO[CEO<br/>Root Node]
     M1[Manager1]
@@ -138,8 +136,7 @@ graph TD
 Java does not provide a built-in `Tree` class, but it provides **TreeMap** and **TreeSet** which use internal tree structures (Red-Black Trees) to maintain sorted data.  
 At this stage, we focus on **understanding how trees work conceptually**, rather than implementing complex versions.
 
-Let’s simulate a simple tree using nested arrays (since classes are not yet taught):
-
+Let's simulate a simple tree using nested arrays (since classes are not yet taught):
 ```java
 public class SimpleTree {
   public static void main(String[] args) {
@@ -220,7 +217,6 @@ Binary Trees are one of the most widely used data structures in computer science
 ### Visual Example
 
 Below is a simple representation of a binary tree that stores numeric values:
-
 ```mermaid
 graph TD
     N10[10<br/>Root]
@@ -254,7 +250,6 @@ graph TD
 Every node has at most two children.
 Representing a Binary Tree in Java (Conceptual)
 We will use parallel arrays to represent the parent–child relationships of a binary tree.
-
 ```java
 public class SimpleBinaryTree {
   public static void main(String[] args) {
@@ -301,7 +296,6 @@ Tree traversal means visiting every node in a specific order. The three common w
 | **Postorder** | Visit left subtree → right subtree → root | Left → Right → Root |
 
 To help understand traversal order, consider this binary tree again:
-
 ```mermaid
 graph TD
     A[A<br/>Root]
@@ -328,24 +322,91 @@ graph TD
 | **Preorder**   | A, B, D, E, C  |
 | **Postorder**  | D, E, B, C, A  |
 
-### Traversal Using Recursion (Conceptual Demo)
+### Implementing Tree Traversal in Java
 
-Although recursion will be explained later in this lesson, we can conceptually describe traversal using recursive logic.
-Example pseudocode for an Inorder Traversal:
-```php
-function inorder(node):
-    if node is not null:
-        inorder(node.left)
-        print(node.value)
-        inorder(node.right)
+Now let's see how to implement tree traversal using recursion. We'll use an array-based representation where for any node at index `i`:
+- Left child is at index: `2 * i + 1`
+- Right child is at index: `2 * i + 2`
+```java
+public class TreeTraversalDemo {
+  static String[] tree = {"A", "B", "C", "D", "E", null, null};
+  
+  // Inorder Traversal: Left -> Root -> Right
+  public static void inorderTraversal(int index) {
+    if (index >= tree.length || tree[index] == null) {
+      return;
+    }
+    
+    // Visit left subtree
+    inorderTraversal(2 * index + 1);
+    
+    // Visit root
+    System.out.print(tree[index] + " ");
+    
+    // Visit right subtree
+    inorderTraversal(2 * index + 2);
+  }
+  
+  // Preorder Traversal: Root -> Left -> Right
+  public static void preorderTraversal(int index) {
+    if (index >= tree.length || tree[index] == null) {
+      return;
+    }
+    
+    // Visit root
+    System.out.print(tree[index] + " ");
+    
+    // Visit left subtree
+    preorderTraversal(2 * index + 1);
+    
+    // Visit right subtree
+    preorderTraversal(2 * index + 2);
+  }
+  
+  // Postorder Traversal: Left -> Right -> Root
+  public static void postorderTraversal(int index) {
+    if (index >= tree.length || tree[index] == null) {
+      return;
+    }
+    
+    // Visit left subtree
+    postorderTraversal(2 * index + 1);
+    
+    // Visit right subtree
+    postorderTraversal(2 * index + 2);
+    
+    // Visit root
+    System.out.print(tree[index] + " ");
+  }
+  
+  public static void main(String[] args) {
+    System.out.print("Inorder Traversal: ");
+    inorderTraversal(0);
+    System.out.println();
+    
+    System.out.print("Preorder Traversal: ");
+    preorderTraversal(0);
+    System.out.println();
+    
+    System.out.print("Postorder Traversal: ");
+    postorderTraversal(0);
+    System.out.println();
+  }
+}
 ```
 
-This shows the self-repeating nature of tree traversal — a perfect example of recursion.
+**Output:**
+```
+Inorder Traversal: D B E A C 
+Preorder Traversal: A B D E C 
+Postorder Traversal: D E B C A 
+```
+
+Notice how each traversal method calls itself recursively to process left and right subtrees. This is a perfect example of **recursion** in action, which we'll explore in more detail later in this lesson.
 
 ### Activity: Explore Traversal Logic
 
 Use pen and paper to manually list the order of nodes visited in Inorder, Preorder, and Postorder for this tree:
-
 ```css
 
         M
@@ -353,8 +414,6 @@ Use pen and paper to manually list the order of nodes visited in Inorder, Preord
       J   S
      / \   \
     A  K    T
-
-
 ```
 - Write down each traversal order carefully.
 - Compare your answers with your peers.
@@ -371,6 +430,29 @@ Use pen and paper to manually list the order of nodes visited in Inorder, Preord
 
 An **algorithm** is a step-by-step procedure to solve a problem. In the context of data structures, algorithms are used to perform operations such as searching, sorting, and traversing data efficiently.  
 In this section, we focus on **searching algorithms**, which are used to find the position of a specific element within a collection such as an array or a list.
+
+---
+
+### Understanding Algorithm Efficiency
+
+Before we dive into searching algorithms, it's important to understand how we measure their performance.
+
+> **📊 Algorithm Efficiency - Big O Notation:**
+> 
+> When we write **O(n)** or **O(log n)**, we're measuring how the algorithm's speed changes as data grows:
+> 
+> - **O(1)** = **Constant time** - Always the same speed, regardless of data size (e.g., accessing an array element by index)
+> - **O(n)** = **Linear time** - Time grows proportionally with data size (e.g., checking every element in a list)
+> - **O(log n)** = **Logarithmic time** - Much faster growth; dividing the problem by half repeatedly (e.g., binary search)
+> - **O(n²)** = **Quadratic time** - Time grows with the square of data size (e.g., nested loops)
+> 
+> **Example:** If you have 100 items:
+> - O(1) takes the same time as 1 item
+> - O(n) takes 100 steps
+> - O(log n) takes about 7 steps
+> - O(n²) takes 10,000 steps
+> 
+> Lower complexity = faster algorithm for large datasets!
 
 ---
 
@@ -391,7 +473,6 @@ It is the simplest and most straightforward searching algorithm.
 - Best case: The element is found at the first position.
 - Worst case: The element is not found, or it is the last one (O(n) complexity).
 - Use case: Works on both sorted and unsorted lists.
-
 ```java
 public class LinearSearchDemo {
   public static void main(String[] args) {
@@ -435,7 +516,6 @@ It repeatedly divides the search range by half, discarding the half that cannot 
 
 
 Example: Binary Search in Java
-
 ```java
 public class BinarySearchDemo {
   public static void main(String[] args) {
@@ -471,7 +551,6 @@ public class BinarySearchDemo {
 ```
 Element found at index: 4
 ```
-
 ```mermaid
 graph TD
     Start["Start: Array [2,4,6,8,10,12,14,16]<br/>Target: 10"]
@@ -539,7 +618,7 @@ Some algorithms are simple but slow, while others are complex yet faster on larg
 ### Bubble Sort
 
 Bubble Sort is the simplest sorting algorithm. It repeatedly compares adjacent elements and swaps them if they are in the wrong order.
-After each pass, the largest element “bubbles up” to the end of the list.
+After each pass, the largest element "bubbles up" to the end of the list.
 
 - **Concept:** Repeatedly compare adjacent pairs and swap if needed.
 - **Time Complexity:** O(n²) — because of nested loops.
@@ -548,7 +627,6 @@ After each pass, the largest element “bubbles up” to the end of the list.
 - **Use Case:** Educational use and small data sets.
 
 Example: Bubble Sort in Java
-
 ```java
 public class BubbleSortDemo {
   public static void main(String[] args) {
@@ -577,7 +655,6 @@ public class BubbleSortDemo {
 ```
 Sorted array: 2 3 4 5 8
 ```
-
 ```mermaid
 graph TD
     Start["Initial Array:<br/>[5, 3, 8, 4, 2]"]
@@ -613,7 +690,6 @@ It repeatedly finds the smallest element in the unsorted portion and places it a
 
 
 Example: Selection Sort in Java
-
 ```java
 
 public class SelectionSortDemo {
@@ -676,7 +752,217 @@ Comparing Sorting Algorithms
 
 ---
 
+## Part 6: Recursion
 
+**Recursion** is a programming technique where a function calls itself to solve a problem by breaking it down into smaller, simpler versions of the same problem.  
+Recursion is a fundamental concept in computer science and is particularly powerful when working with hierarchical data structures like trees.
 
+---
 
+### What Is Recursion?
+
+Recursion occurs when a function invokes itself during its execution. Each recursive call works on a smaller portion of the problem until it reaches a **base case** — a condition where the function stops calling itself and returns a result.
+
+Think of recursion like a set of Russian nesting dolls:
+- You open one doll (solve one part of the problem)
+- Inside is another smaller doll (a simpler version of the same problem)
+- You keep opening dolls until you reach the smallest one that doesn't open (the base case)
+
+---
+
+### Key Components of Recursion
+
+Every recursive function must have two essential components:
+
+| Component | Description |
+|-----------|-------------|
+| **Base Case** | The stopping condition that prevents infinite recursion. When reached, the function returns a value without making another recursive call. |
+| **Recursive Case** | The part where the function calls itself with a simpler or smaller input, moving toward the base case. |
+
+Without a base case, the function would call itself forever, causing a **stack overflow error**.
+
+---
+
+### Simple Example: Factorial
+
+The factorial of a number `n` (written as `n!`) is the product of all positive integers from 1 to n.
+
+**Mathematical Definition:**
+- 5! = 5 × 4 × 3 × 2 × 1 = 120
+- 3! = 3 × 2 × 1 = 6
+- 1! = 1
+- 0! = 1 (by definition)
+
+**Recursive Definition:**
+- factorial(n) = n × factorial(n - 1)
+- factorial(0) = 1 (base case)
+```java
+public class RecursionDemo {
+  
+  // Recursive method to calculate factorial
+  public static int factorial(int n) {
+    // Base case: stop recursion when n is 0 or 1
+    if (n == 0 || n == 1) {
+      return 1;
+    }
+    
+    // Recursive case: n! = n × (n-1)!
+    return n * factorial(n - 1);
+  }
+  
+  public static void main(String[] args) {
+    int number = 5;
+    int result = factorial(number);
+    System.out.println("Factorial of " + number + " is: " + result);
+  }
+}
+```
+
+**Output:**
+```
+Factorial of 5 is: 120
+```
+
+**How It Works:**
+```
+factorial(5)
+  = 5 × factorial(4)
+  = 5 × (4 × factorial(3))
+  = 5 × (4 × (3 × factorial(2)))
+  = 5 × (4 × (3 × (2 × factorial(1))))
+  = 5 × (4 × (3 × (2 × 1)))
+  = 5 × (4 × (3 × 2))
+  = 5 × (4 × 6)
+  = 5 × 24
+  = 120
+```
+
+---
+
+### Another Example: Sum of Numbers
+
+Calculate the sum of all numbers from 1 to n.
+```java
+public class SumRecursion {
+  
+  public static int sum(int n) {
+    // Base case
+    if (n == 1) {
+      return 1;
+    }
+    
+    // Recursive case
+    return n + sum(n - 1);
+  }
+  
+  public static void main(String[] args) {
+    int number = 5;
+    System.out.println("Sum of 1 to " + number + " is: " + sum(number));
+  }
+}
+```
+
+**Output:**
+```
+Sum of 1 to 5 is: 15
+```
+
+---
+
+### Recursion and Tree Traversal
+
+Remember the tree traversal code we saw in Part 3? That's recursion in action!
+
+Each traversal method calls itself to process the left and right subtrees:
+```java
+public static void inorderTraversal(int index) {
+  if (index >= tree.length || tree[index] == null) {
+    return;  // Base case: stop if out of bounds or null
+  }
+  
+  inorderTraversal(2 * index + 1);      // Recursive case: left subtree
+  System.out.print(tree[index] + " ");  // Process current node
+  inorderTraversal(2 * index + 2);      // Recursive case: right subtree
+}
+```
+
+This is why recursion is so natural for tree structures — trees are inherently recursive (each subtree is itself a tree).
+
+---
+
+### Recursion vs. Iteration
+
+Many problems can be solved using either recursion or iteration (loops). Here's a comparison:
+
+| Aspect | Recursion | Iteration |
+|--------|-----------|-----------|
+| **Readability** | Often clearer for hierarchical problems | Can be more straightforward for simple loops |
+| **Memory** | Uses call stack (more memory) | Uses less memory |
+| **Performance** | Can be slower due to function calls | Generally faster |
+| **Best For** | Trees, graphs, divide-and-conquer | Simple counting, sequential operations |
+
+**Example - Same Problem, Different Approaches:**
+```java
+// Recursive approach
+public static int factorialRecursive(int n) {
+  if (n <= 1) return 1;
+  return n * factorialRecursive(n - 1);
+}
+
+// Iterative approach
+public static int factorialIterative(int n) {
+  int result = 1;
+  for (int i = 2; i <= n; i++) {
+    result *= i;
+  }
+  return result;
+}
+```
+
+Both produce the same result, but the recursive version is more elegant for this problem.
+
+---
+
+### Activity: Practice Recursion
+
+Write a recursive Java method for the following:
+
+1. **Fibonacci Sequence:** Calculate the nth Fibonacci number
+   - fibonacci(0) = 0
+   - fibonacci(1) = 1
+   - fibonacci(n) = fibonacci(n-1) + fibonacci(n-2)
+
+2. **Power Function:** Calculate x raised to the power of n (x^n)
+   - power(x, 0) = 1
+   - power(x, n) = x × power(x, n-1)
+
+Test your methods with different inputs and trace through the recursive calls.
+
+---
+
+### Key Takeaways
+
+- **Recursion** is when a function calls itself to solve smaller instances of the same problem.
+- Every recursive function must have a **base case** to stop recursion and a **recursive case** to break down the problem.
+- Recursion is particularly useful for hierarchical structures like trees and divide-and-conquer algorithms.
+- Tree traversal naturally uses recursion because trees are recursive structures.
+- While recursion can be elegant, it uses more memory than iteration due to the call stack.
+- Understanding recursion is essential for mastering advanced data structures and algorithms.
+
+---
+
+## Lesson Summary
+
+In this lesson, we explored:
+
+1. **Non-Linear Data Structures** — Data organized hierarchically rather than sequentially
+2. **Trees** — Hierarchical structures with parent-child relationships
+3. **Binary Trees** — Trees where each node has at most two children
+4. **Searching Algorithms** — Linear Search (O(n)) and Binary Search (O(log n))
+5. **Sorting Algorithms** — Bubble Sort and Selection Sort (both O(n²))
+6. **Recursion** — Functions that call themselves to solve problems incrementally
+
+These concepts form the foundation for more advanced topics in data structures and algorithms, including Binary Search Trees, Heaps, Graph algorithms, and dynamic programming.
+
+---
 
