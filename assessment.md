@@ -1,68 +1,116 @@
 # Assessment / Quiz
 
 ## Overview
-- **Lesson:** [title / module.lesson]
+- **Lesson:** Data Structures and Algorithms (Part 2) / 3.5
 - **Format:** 10 questions (mix MCQ / True–False / Short Answer)
 - **Time:** ~10–15 minutes
 - **Scoring:** 1 point each (unless stated)
 
 ## Questions
 
-### Q1 (MCQ)
-[Question?]  
-A. [ ]  
-B. [ ]  
-C. [ ]  
-D. [ ]  
-**Answer:** [A/B/C/D] — [1-line reason]
+### Q1 (True/False)
 
-### Q2 (MCQ)
-[Question?]  
-A. [ ]  
-B. [ ]  
-C. [ ]  
-D. [ ]  
-**Answer:** [A/B/C/D] — [1-line reason]
+Q1: In a non-linear data structure, elements are arranged sequentially one after another?
 
-### Q3 (True/False)
-[Statement]  
-**Answer:** [True/False] — [1-line reason]
+A - True
 
-### Q4 (True/False)
-[Statement]  
-**Answer:** [True/False] — [1-line reason]
+B - False
 
-### Q5 (Short Answer)
-[Prompt]  
-**Expected:** [1–2 key points]
+---
 
-### Q6 (Short Answer)
-[Prompt]  
-**Expected:** [1–2 key points]
+Q2: What is the maximum number of children a node can have in a Binary Tree?
 
-### Q7 (MCQ)
-[Question?]  
-A. [ ]  
-B. [ ]  
-C. [ ]  
-D. [ ]  
-**Answer:** [A/B/C/D] — [1-line reason]
+A - 1
 
-### Q8 (MCQ)
-[Question?]  
-A. [ ]  
-B. [ ]  
-C. [ ]  
-D. [ ]  
-**Answer:** [A/B/C/D] — [1-line reason]
+B - 2
 
-### Q9 (True/False)
-[Statement]  
-**Answer:** [True/False] — [1-line reason]
+C - 3
 
-### Q10 (Short Answer)
-[Prompt]  
-**Expected:** [1–2 key points]
+D - Unlimited
+
+---
+
+Q3: A node with no children in a tree is called a leaf node?
+
+A - True
+
+B - False
+
+---
+
+Q4: Which tree traversal method visits nodes in the order: Left → Root → Right?
+
+A - Preorder
+
+B - Inorder
+
+C - Postorder
+
+D - Level order
+
+---
+
+Q5: What is the time complexity of Linear Search in the worst case?
+
+A - O(1)
+
+B - O(log n)
+
+C - O(n)
+
+D - O(n²)
+
+---
+
+Q6: Binary Search can only be performed on a sorted array or list?
+
+A - True
+
+B - False
+
+---
+
+Q7: Which sorting algorithm repeatedly swaps adjacent elements if they are in the wrong order?
+
+A - Selection Sort
+
+B - Bubble Sort
+
+C - Merge Sort
+
+D - Quick Sort
+
+---
+
+Q8: What are the two essential components of a recursive function?
+
+A - Loop and condition
+
+B - Base case and recursive case
+
+C - Start and end
+
+D - Input and output
+
+---
+
+Q9: The time complexity of Bubble Sort is O(n²) in the worst case?
+
+A - True
+
+B - False
+
+---
+
+Q10: What happens if a recursive function does not have a base case?
+
+A - The program runs faster
+
+B - It causes a stack overflow error
+
+C - It returns null
+
+D - It works normally
 
 ## Notes
 - Keep each question atomic and aligned to the lesson objectives.
