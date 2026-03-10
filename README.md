@@ -1,43 +1,32 @@
-# Lesson Repo Template
+# [3.5] Data Structures and Algorithms (Part 2)
 
-Template for creating lesson repositories under **su-ntu-sctp**.
+## Lesson Overview
+![Title](./assets/images/infographic-3.5-data-structures-part2.png)
 
-## Naming (Option A)
-`5/3m-<track>-<module>.<lesson>-<topic-slug>`  
-**Examples**
-`5/3m-ai-3.1-java-intro`
+## Dependencies
+- [Self Studies](./studies.md)
+- [Lesson](./lesson.md)
+- [Assignment](./assignment.md)
+- [Slide Deck](./slides.md)
 
-## Naming (Option B) 
+## Lesson Objectives
+* **Differentiate** between linear and non-linear data structures
+* **Describe** the structure and characteristics of Trees and Binary Trees
+* **Implement** Linear Search to locate elements in an array
+* **Implement** Bubble Sort to arrange array elements in ascending order
+* **Explain** what recursion is and write a simple recursive method
 
-`<track>-<module>.<lesson>-<topic-slug>`
+## Lesson Plan
 
-**Examples**
-`ai-3.1-java-intro`
-
-
-## Structure
-```text
-.
-├─ README.md
-├─ lesson.md
-├─ assignment.md
-├─ quiz.md
-├─ studies.md
-├─ slides/
-│  └─ placeholder.txt
-├─ assets/
-│  ├─ images/
-│  └─ data/
-└─ .gitignore
-```
-
-
-## Use This Template
-1) Click **Use this template → Create new repository**  
-2) Name it using the convention above  
-3) Clone, edit files, commit, push
-
-## Notes
-- Put slides in `slides/` (pptx/pdf)  
-- Images in `assets/images/`, data in `assets/data/`  
-- Each file contains its own authoring instructions (open and follow the checklists inside)
+| Duration | What | How or Why |
+|----------|------|------------|
+| 10 min | Warm up | Recap Lesson 3.4 — review linear data structures and Big O concepts |
+| 15 min | Part 1: Non-Linear Data Structures | Introduce hierarchical vs sequential structure; comparison table and diagram |
+| 20 min | Part 2: Trees | Explain terminology and visual structure; code-along with SimpleTree; activity |
+| 20 min | Part 3: Binary Trees | Extend tree concept to left/right children; code-along with SimpleBinaryTree |
+| 10 min | Break | — |
+| 25 min | Part 4: Searching | Introduce Big O notation; teach Linear Search with code-along; activity |
+| 25 min | Part 5: Sorting | Introduce Bubble Sort with diagram; code-along; activity |
+| 25 min | Part 6: Recursion | Explain base case and recursive case; code-along Factorial and Sum; activity |
+| 10 min | Wrap up | Recap all 6 topics, preview assignment, Q&A |
+| **Total** | | **160 min — allows ~20 min buffer for questions and pacing** |

@@ -13,16 +13,16 @@ This lesson continues the exploration of data structures and algorithms in Java.
 By the end of this lesson, students will be able to:
 - Differentiate between linear and non-linear data structures.
 - Describe the structure and characteristics of Trees and Binary Trees.
-- Implement simple examples of tree traversal using recursion.
-- Explain and apply basic searching and sorting algorithms.
-- Understand the concept of recursion and its role in algorithm design.
+- Implement Linear Search to locate elements in an array.
+- Implement Bubble Sort to arrange array elements in ascending order.
+- Explain what recursion is and write a simple recursive method.
 
 ---
 
 ## Part 1: Introduction to Non-Linear Data Structures
 
 In the previous lesson, we explored **linear data structures** such as arrays, lists, and hash-based collections, where elements are stored **sequentially** — one after another.  
-However, not all problems fit neatly into a linear order. Some require **hierarchical** or **network-like** relationships between data elements.  
+However, not all problems fit neatly into a linear order. Some require **hierarchical** or **network-like** relationships between data elements.
 
 This is where **non-linear data structures** come in.
 
@@ -37,6 +37,7 @@ This allows more complex data relationships and efficient solutions to problems 
 | Traversal | One path (start to end) | Multiple paths possible |
 | Example Structures | Array, LinkedList, ArrayList | Tree, Binary Tree, Graph |
 | Use Case | Storing ordered data | Representing relationships |
+
 ```mermaid
 graph LR
     subgraph Linear["Linear Structure (Array/List)"]
@@ -84,7 +85,7 @@ Think of a tree like a **family tree** or a **folder structure** on your compute
 
 ---
 
-###  Basic Terms in a Tree
+### Basic Terms in a Tree
 
 | Term | Description |
 |------|--------------|
@@ -98,11 +99,11 @@ Think of a tree like a **family tree** or a **folder structure** on your compute
 
 ---
 
-###  Visual Representation
+### Visual Representation
 
 Here's an example of a simple tree representing an organization structure:
-```mermaid
 
+```mermaid
 graph TD
     CEO[CEO<br/>Root Node]
     M1[Manager1]
@@ -131,12 +132,13 @@ graph TD
 
 ---
 
-###  Understanding Trees in Java (Conceptual)
+### Understanding Trees in Java (Conceptual)
 
 Java does not provide a built-in `Tree` class, but it provides **TreeMap** and **TreeSet** which use internal tree structures (Red-Black Trees) to maintain sorted data.  
 At this stage, we focus on **understanding how trees work conceptually**, rather than implementing complex versions.
 
 Let's simulate a simple tree using nested arrays (since classes are not yet taught):
+
 ```java
 public class SimpleTree {
   public static void main(String[] args) {
@@ -167,6 +169,8 @@ public class SimpleTree {
 }
 ```
 
+**Output:**
+```
 Root Node: CEO
 
 Children of CEO:
@@ -179,23 +183,27 @@ Children of Manager1:
 
 Children of Manager2:
   - Tester1
+```
 
 This simple example demonstrates the hierarchical structure of a tree — each node may have multiple child nodes, and data is not stored sequentially but in parent–child relationships.
 
-###  Activity: Build Your Own Tree
+### Activity: Build Your Own Tree **(5 minutes)**
+
 Write a Java program to represent a **school structure** using arrays:
-- Root node: "Principal"
-- Children: "Teacher1", "Teacher2"
-- Each teacher has two students.
-- Display all nodes in a clear hierarchical format.
+- Root node: `"Principal"`
+- Children: `"Teacher1"`, `"Teacher2"`
+- Each teacher has two students
+- Display all nodes in a clear hierarchical format
 
 ---
 
-###  Key Takeaways
+### Key Takeaways
 - A **Tree** is a hierarchical, non-linear structure made of nodes and edges.
 - It starts with a **root node** and expands into **subtrees**.
 - Trees are widely used in real-world applications such as file systems, databases, and organizational hierarchies.
 - In Java, conceptual tree structures can be simulated using arrays or later implemented using custom node classes once OOP is covered.
+
+---
 
 ## Part 3: Binary Trees
 
@@ -217,6 +225,7 @@ Binary Trees are one of the most widely used data structures in computer science
 ### Visual Example
 
 Below is a simple representation of a binary tree that stores numeric values:
+
 ```mermaid
 graph TD
     N10[10<br/>Root]
@@ -246,10 +255,14 @@ graph TD
 - 10 is the root.
 - 5 and 15 are the children of 10.
 - 2, 7, 12, and 20 are leaf nodes.
+- Every node has at most two children.
 
-Every node has at most two children.
-Representing a Binary Tree in Java (Conceptual)
+---
+
+### Representing a Binary Tree in Java (Conceptual)
+
 We will use parallel arrays to represent the parent–child relationships of a binary tree.
+
 ```java
 public class SimpleBinaryTree {
   public static void main(String[] args) {
@@ -273,6 +286,7 @@ public class SimpleBinaryTree {
 **Output:**
 ```
 Binary Tree Nodes and Their Children:
+
 Node 10 -> Left: 5, Right: 15
 Node 5 -> Left: 2, Right: 7
 Node 15 -> Left: 12, Right: 20
@@ -282,149 +296,16 @@ Node 12 -> Left: null, Right: null
 Node 20 -> Left: null, Right: null
 ```
 
-This approach helps visualize how binary tree nodes are connected logically through left and right links.
-Later, when students learn classes, they can represent each node as an object with left and right references.
+This approach helps visualise how binary tree nodes are connected logically through left and right links. Later, when students learn classes, they can represent each node as an object with left and right references.
 
-### Traversing a Binary Tree
+---
 
-Tree traversal means visiting every node in a specific order. The three common ways to traverse a binary tree are:
-
-| Type | Description | Visit Order |
-|------|-------------|-------------|
-| **Inorder** | Visit left subtree → root → right subtree | Left → Root → Right |
-| **Preorder** | Visit root → left subtree → right subtree | Root → Left → Right |
-| **Postorder** | Visit left subtree → right subtree → root | Left → Right → Root |
-
-To help understand traversal order, consider this binary tree again:
-```mermaid
-graph TD
-    A[A<br/>Root]
-    B[B]
-    C[C]
-    D[D<br/>Leaf]
-    E[E<br/>Leaf]
-
-    A --> B
-    A --> C
-    B --> D
-    B --> E
-
-    style A fill:#e3f2fd
-    style B fill:#e3f2fd
-    style C fill:#e3f2fd
-    style D fill:#e3f2fd
-    style E fill:#e3f2fd
-```
-
-| Traversal Type | Visiting Order |
-| -------------- | -------------- |
-| **Inorder**    | D, B, E, A, C  |
-| **Preorder**   | A, B, D, E, C  |
-| **Postorder**  | D, E, B, C, A  |
-
-### Implementing Tree Traversal in Java
-
-Now let's see how to implement tree traversal using recursion. We'll use an array-based representation where for any node at index `i`:
-- Left child is at index: `2 * i + 1`
-- Right child is at index: `2 * i + 2`
-```java
-public class TreeTraversalDemo {
-  static String[] tree = {"A", "B", "C", "D", "E", null, null};
-  
-  // Inorder Traversal: Left -> Root -> Right
-  public static void inorderTraversal(int index) {
-    if (index >= tree.length || tree[index] == null) {
-      return;
-    }
-    
-    // Visit left subtree
-    inorderTraversal(2 * index + 1);
-    
-    // Visit root
-    System.out.print(tree[index] + " ");
-    
-    // Visit right subtree
-    inorderTraversal(2 * index + 2);
-  }
-  
-  // Preorder Traversal: Root -> Left -> Right
-  public static void preorderTraversal(int index) {
-    if (index >= tree.length || tree[index] == null) {
-      return;
-    }
-    
-    // Visit root
-    System.out.print(tree[index] + " ");
-    
-    // Visit left subtree
-    preorderTraversal(2 * index + 1);
-    
-    // Visit right subtree
-    preorderTraversal(2 * index + 2);
-  }
-  
-  // Postorder Traversal: Left -> Right -> Root
-  public static void postorderTraversal(int index) {
-    if (index >= tree.length || tree[index] == null) {
-      return;
-    }
-    
-    // Visit left subtree
-    postorderTraversal(2 * index + 1);
-    
-    // Visit right subtree
-    postorderTraversal(2 * index + 2);
-    
-    // Visit root
-    System.out.print(tree[index] + " ");
-  }
-  
-  public static void main(String[] args) {
-    System.out.print("Inorder Traversal: ");
-    inorderTraversal(0);
-    System.out.println();
-    
-    System.out.print("Preorder Traversal: ");
-    preorderTraversal(0);
-    System.out.println();
-    
-    System.out.print("Postorder Traversal: ");
-    postorderTraversal(0);
-    System.out.println();
-  }
-}
-```
-
-**Output:**
-```
-Inorder Traversal: D B E A C 
-Preorder Traversal: A B D E C 
-Postorder Traversal: D E B C A 
-```
-
-Notice how each traversal method calls itself recursively to process left and right subtrees. This is a perfect example of **recursion** in action, which we'll explore in more detail later in this lesson.
-
-### Activity: Explore Traversal Logic
-
-Use pen and paper to manually list the order of nodes visited in Inorder, Preorder, and Postorder for this tree:
-```css
-
-        M
-       / \
-      J   S
-     / \   \
-    A  K    T
-```
-- Write down each traversal order carefully.
-- Compare your answers with your peers.
-- Discuss which traversal type is best suited for searching.
-
-#### Key Takeaways
-
+### Key Takeaways
 - A Binary Tree is a hierarchical structure where each node can have at most two children.
 - Binary Trees are used as the basis for Binary Search Trees, Heaps, and Expression Trees.
-- Traversal refers to visiting each node in a specific order — Inorder, Preorder, or Postorder.
 - Understanding binary trees helps in mastering more complex algorithms such as searching and recursion.
+
+---
 
 ## Part 4: Algorithms — Searching
 
@@ -437,42 +318,41 @@ In this section, we focus on **searching algorithms**, which are used to find th
 
 Before we dive into searching algorithms, it's important to understand how we measure their performance.
 
-> **📊 Algorithm Efficiency - Big O Notation:**
-> 
+> **📊 Algorithm Efficiency — Big O Notation:**
+>
 > When we write **O(n)** or **O(log n)**, we're measuring how the algorithm's speed changes as data grows:
-> 
-> - **O(1)** = **Constant time** - Always the same speed, regardless of data size (e.g., accessing an array element by index)
-> - **O(n)** = **Linear time** - Time grows proportionally with data size (e.g., checking every element in a list)
-> - **O(log n)** = **Logarithmic time** - Much faster growth; dividing the problem by half repeatedly (e.g., binary search)
-> - **O(n²)** = **Quadratic time** - Time grows with the square of data size (e.g., nested loops)
-> 
+>
+> - **O(1)** = **Constant time** — Always the same speed, regardless of data size (e.g., accessing an array element by index)
+> - **O(n)** = **Linear time** — Time grows proportionally with data size (e.g., checking every element in a list)
+> - **O(log n)** = **Logarithmic time** — Much faster; divides the problem in half repeatedly
+> - **O(n²)** = **Quadratic time** — Time grows with the square of data size (e.g., nested loops)
+>
 > **Example:** If you have 100 items:
-> - O(1) takes the same time as 1 item
+> - O(1) takes the same time regardless of size
 > - O(n) takes 100 steps
 > - O(log n) takes about 7 steps
 > - O(n²) takes 10,000 steps
-> 
+>
 > Lower complexity = faster algorithm for large datasets!
 
 ---
 
 ### What Is Searching?
 
-Searching is the process of checking whether a particular element exists in a collection and, if it does, determining its position or index.  
-Different searching algorithms vary in terms of their speed and efficiency depending on the structure and size of the data.
+Searching is the process of checking whether a particular element exists in a collection and, if it does, determining its position or index.
 
 ---
 
-#### Linear Search
+### Linear Search
 
 A **Linear Search** (also known as a sequential search) checks each element in a list one by one until the desired element is found or the list ends.  
 It is the simplest and most straightforward searching algorithm.
 
+- **Concept:** Start from the first element and compare it with the target value.
+- **Best case:** The element is found at the first position.
+- **Worst case:** The element is not found, or it is the last one — O(n) complexity.
+- **Use case:** Works on both sorted and unsorted lists.
 
-- Concept: Start from the first element and compare it with the target value.
-- Best case: The element is found at the first position.
-- Worst case: The element is not found, or it is the last one (O(n) complexity).
-- Use case: Works on both sorted and unsorted lists.
 ```java
 public class LinearSearchDemo {
   public static void main(String[] args) {
@@ -502,122 +382,43 @@ Element found at index: 2
 
 ---
 
+### Activity: Implement Linear Search **(5 minutes)**
 
-### Binary Search
+- Create a new file `SearchDemo.java`
+- Declare an array of 8 integers: `{2, 5, 8, 12, 16, 23, 38, 45}`
+- Use **Linear Search** to find the number `16` — print the index when found
+- Try searching for a number that doesn't exist (e.g., `99`) and print `"Not found"`
 
-A Binary Search is a much faster searching algorithm, but it only works on sorted data.
-It repeatedly divides the search range by half, discarding the half that cannot contain the target element.
+---
 
-- **Concept:** Divide the list into halves, check the middle element, and narrow the range.
-- **Requirement:** The list must be sorted.
-- **Best case:** Middle element is the target (O(1)).
-- **Worst case:** Target not found (O(log n)).
-- **Use case:** Searching large sorted datasets.
-
-
-Example: Binary Search in Java
-```java
-public class BinarySearchDemo {
-  public static void main(String[] args) {
-    int[] numbers = {2, 4, 6, 8, 10, 12, 14, 16};
-    int target = 10;
-
-    int low = 0;
-    int high = numbers.length - 1;
-    boolean found = false;
-
-    while (low <= high) {
-      int mid = (low + high) / 2;
-
-      if (numbers[mid] == target) {
-        System.out.println("Element found at index: " + mid);
-        found = true;
-        break;
-      } else if (numbers[mid] < target) {
-        low = mid + 1;
-      } else {
-        high = mid - 1;
-      }
-    }
-
-    if (!found) {
-      System.out.println("Element not found in the array.");
-    }
-  }
-}
-```
-
-**Output:**
-```
-Element found at index: 4
-```
-```mermaid
-graph TD
-    Start["Start: Array [2,4,6,8,10,12,14,16]<br/>Target: 10"]
-    Step1["Step 1: low=0, high=7<br/>mid=3, arr[3]=8<br/>8 < 10"]
-    Step2["Step 2: low=4, high=7<br/>mid=5, arr[5]=12<br/>12 > 10"]
-    Step3["Step 3: low=4, high=4<br/>mid=4, arr[4]=10<br/>Found!"]
-    End["Result: Index 4"]
-
-    Start --> Step1
-    Step1 --> Step2
-    Step2 --> Step3
-    Step3 --> End
-
-    style Start fill:#e3f2fd
-    style Step1 fill:#e3f2fd
-    style Step2 fill:#e3f2fd
-    style Step3 fill:#e3f2fd
-    style End fill:#c8e6c9
-```
-
-#### Comparing Linear and Binary Search
-
-| Criteria | Linear Search | Binary Search |
-|-----------|----------------|----------------|
-| **Data Requirement** | Works on unsorted data | Requires sorted data |
-| **Approach** | Sequential checking | Divide and conquer |
-| **Time Complexity** | O(n) | O(log n) |
-| **Ease of Implementation** | Simple | Slightly complex |
-| **When to Use** | Small or unsorted lists | Large sorted datasets |
-
-#### Activity: Compare Linear and Binary Search
-
-- Write a Java program to implement both Linear and Binary Search.
-- Test both algorithms on an array of 10 integers (sorted and unsorted).
-- Measure and print how many comparisons each method performs.
-- Discuss which algorithm performs faster and why.
-
-#### Key Takeaways:
-
+### Key Takeaways
 - Searching algorithms help locate elements in a collection efficiently.
-- Linear Search checks each element sequentially and works on any data set.
-- Binary Search divides the search range by half and requires sorted data.
-- Binary Search is faster for large data sets due to logarithmic time complexity.
-- The choice of algorithm depends on the data structure and whether it is sorted.
+- **Linear Search** checks each element one by one and works on any dataset — sorted or unsorted.
+- It is simple to implement and perfectly sufficient for small datasets.
+
+---
 
 ## Part 5: Algorithms — Sorting
 
 Sorting is the process of arranging data in a particular order — typically ascending or descending.  
 Efficient sorting improves the performance of other operations such as searching and data retrieval.
 
-
+---
 
 ### What Is Sorting?
 
-Sorting algorithms organize the elements of a list so they can be processed or searched efficiently.  
-Some algorithms are simple but slow, while others are complex yet faster on large datasets.
-
+Sorting algorithms organise the elements of a list so they can be processed or searched efficiently.
 
 - **Ascending Order:** From smallest to largest (e.g., 1, 3, 5, 7)
 - **Descending Order:** From largest to smallest (e.g., 7, 5, 3, 1)
 - **Goal:** Reduce the time it takes to find or compare elements
-- **Key Idea:** Compare elements and swap or insert them into the correct position
+- **Key Idea:** Compare elements and swap them into the correct position
 
+---
 
 ### Bubble Sort
 
-Bubble Sort is the simplest sorting algorithm. It repeatedly compares adjacent elements and swaps them if they are in the wrong order.
+Bubble Sort is the simplest sorting algorithm. It repeatedly compares adjacent elements and swaps them if they are in the wrong order.  
 After each pass, the largest element "bubbles up" to the end of the list.
 
 - **Concept:** Repeatedly compare adjacent pairs and swap if needed.
@@ -626,7 +427,6 @@ After each pass, the largest element "bubbles up" to the end of the list.
 - **Worst Case:** When the list is completely unsorted.
 - **Use Case:** Educational use and small data sets.
 
-Example: Bubble Sort in Java
 ```java
 public class BubbleSortDemo {
   public static void main(String[] args) {
@@ -655,100 +455,62 @@ public class BubbleSortDemo {
 ```
 Sorted array: 2 3 4 5 8
 ```
+
 ```mermaid
 graph TD
     Start["Initial Array:<br/>[5, 3, 8, 4, 2]"]
-    Pass1["Pass 1:<br/>[3, 5, 8, 4, 2]<br/>Largest (8) bubbles right"]
-    Pass2["Pass 2:<br/>[3, 5, 4, 2, 8]<br/>Next largest (5) moves right"]
-    Pass3["Pass 3:<br/>[3, 4, 2, 5, 8]<br/>Continue sorting"]
-    Pass4["Pass 4:<br/>[3, 2, 4, 5, 8]<br/>Almost done"]
-    Pass5["Pass 5:<br/>[2, 3, 4, 5, 8]<br/>Fully sorted"]
+    Pass1["Pass 1:<br/>[3, 5, 4, 2, 8]<br/>Largest (8) bubbles right"]
+    Pass2["Pass 2:<br/>[3, 4, 2, 5, 8]<br/>Next largest moves right"]
+    Pass3["Pass 3:<br/>[3, 2, 4, 5, 8]<br/>Continue sorting"]
+    Pass4["Pass 4:<br/>[2, 3, 4, 5, 8]<br/>Fully sorted"]
 
     Start --> Pass1
     Pass1 --> Pass2
     Pass2 --> Pass3
     Pass3 --> Pass4
-    Pass4 --> Pass5
 
     style Start fill:#ffcdd2
     style Pass1 fill:#e3f2fd
     style Pass2 fill:#e3f2fd
     style Pass3 fill:#e3f2fd
-    style Pass4 fill:#e3f2fd
-    style Pass5 fill:#c8e6c9
+    style Pass4 fill:#c8e6c9
 ```
 
-### Selection Sort
+---
 
-Selection Sort improves on Bubble Sort slightly by reducing the number of swaps.
-It repeatedly finds the smallest element in the unsorted portion and places it at the beginning.
+### Other Sorting Algorithms (Awareness Only — No Coding Required)
 
-- **Concept:** Select the smallest element and move it to its correct position.
-- **Time Complexity:** O(n²) — still uses nested loops.
-- **Best Case:** Works the same regardless of initial order.
-- **Use Case:** When data movement cost is more critical than comparison cost.
+You don't need to implement these today, but it's good to know they exist. These algorithms are faster for large datasets and use more advanced techniques internally:
 
+- **Selection Sort:** Finds the smallest element and moves it to the correct position each pass.
+- **Insertion Sort:** Builds the sorted list one element at a time. Efficient for small or nearly sorted datasets.
+- **Merge Sort:** Uses divide-and-conquer to split the array and merge in sorted order.
+- **Quick Sort:** Selects a pivot element to partition the array. Very efficient on large datasets.
 
-Example: Selection Sort in Java
-```java
+| Algorithm | Time Complexity | Best For |
+|------------|-----------------|----------|
+| **Bubble Sort** | O(n²) | Learning and small data |
+| **Selection Sort** | O(n²) | Fewer swaps needed |
+| **Insertion Sort** | O(n²) | Small or partially sorted data |
+| **Merge Sort** | O(n log n) | Large datasets |
+| **Quick Sort** | O(n log n) average | General-purpose fast sorting |
 
-public class SelectionSortDemo {
-  public static void main(String[] args) {
-    int[] numbers = {64, 25, 12, 22, 11};
-    int n = numbers.length;
+---
 
-    for (int i = 0; i < n - 1; i++) {
-      int minIndex = i;
-      for (int j = i + 1; j < n; j++) {
-        if (numbers[j] < numbers[minIndex]) {
-          minIndex = j;
-        }
-      }
+### Activity: Implement Bubble Sort **(5 minutes)**
 
-      int temp = numbers[minIndex];
-      numbers[minIndex] = numbers[i];
-      numbers[i] = temp;
-    }
+- Create a new file `SortDemo.java`
+- Declare this array: `{45, 12, 89, 33, 67}`
+- Sort it using **Bubble Sort** and print the result
+- Expected output: `12 33 45 67 89`
 
-    System.out.print("Sorted array: ");
-    for (int num : numbers) {
-      System.out.print(num + " ");
-    }
-  }
-}
-```
+---
 
-**Output:**
-```
-Sorted array: 11 12 22 25 64
-```
-
-Other Sorting Algorithms (Brief Overview)
-- **Insertion Sort:** Builds the sorted list one element at a time by comparing and inserting at the correct position. Efficient for small or nearly sorted datasets.
-- **Merge Sort:** Uses the divide-and-conquer approach to split the array and merge them in sorted order. Requires recursion.
-- **Quick Sort:** Similar to Merge Sort but selects a pivot element to partition the array. Very efficient on large datasets.
-
-Comparing Sorting Algorithms
-| Algorithm | Time Complexity | Space Complexity | Best For |
-|------------|-----------------|------------------|-----------|
-| **Bubble Sort** | O(n²) | O(1) | Teaching simplicity |
-| **Selection Sort** | O(n²) | O(1) | Fewer swaps |
-| **Insertion Sort** | O(n²) | O(1) | Small or partially sorted data |
-| **Merge Sort** | O(n log n) | O(n) | Large datasets, stable sorting |
-| **Quick Sort** | O(n log n) average | O(log n) | General-purpose fast sorting |
-
-#### Activity: Implement Sorting
-- Write a Java program that implements both Bubble Sort and Selection Sort.
-- Use the same array `{45, 12, 89, 33, 67}` for both algorithms.
-- Print the sorted array and compare the number of iterations for each.
-- Discuss which algorithm is easier to understand and why.
-
-#### Key Takeaways
-- Sorting organizes data to make searching and comparison faster.
-- Bubble Sort repeatedly swaps adjacent elements until the list is sorted.
-- Selection Sort finds the smallest element and moves it to its correct position.
-- Merge Sort and Quick Sort use recursion and are faster for large datasets.
-- Choosing the right sorting algorithm depends on data size and performance needs.
+### Key Takeaways
+- Sorting organises data to make searching and comparison faster.
+- **Bubble Sort** repeatedly swaps adjacent elements until the list is sorted.
+- Nested loops give Bubble Sort an O(n²) time complexity.
+- Faster algorithms like Merge Sort and Quick Sort exist for larger datasets.
 
 ---
 
@@ -763,7 +525,7 @@ Recursion is a fundamental concept in computer science and is particularly power
 
 Recursion occurs when a function invokes itself during its execution. Each recursive call works on a smaller portion of the problem until it reaches a **base case** — a condition where the function stops calling itself and returns a result.
 
-Think of recursion like a set of Russian nesting dolls:
+Think of recursion like a set of **Russian nesting dolls**:
 - You open one doll (solve one part of the problem)
 - Inside is another smaller doll (a simpler version of the same problem)
 - You keep opening dolls until you reach the smallest one that doesn't open (the base case)
@@ -796,20 +558,21 @@ The factorial of a number `n` (written as `n!`) is the product of all positive i
 **Recursive Definition:**
 - factorial(n) = n × factorial(n - 1)
 - factorial(0) = 1 (base case)
+
 ```java
 public class RecursionDemo {
-  
+
   // Recursive method to calculate factorial
   public static int factorial(int n) {
     // Base case: stop recursion when n is 0 or 1
     if (n == 0 || n == 1) {
       return 1;
     }
-    
+
     // Recursive case: n! = n × (n-1)!
     return n * factorial(n - 1);
   }
-  
+
   public static void main(String[] args) {
     int number = 5;
     int result = factorial(number);
@@ -831,8 +594,6 @@ factorial(5)
   = 5 × (4 × (3 × factorial(2)))
   = 5 × (4 × (3 × (2 × factorial(1))))
   = 5 × (4 × (3 × (2 × 1)))
-  = 5 × (4 × (3 × 2))
-  = 5 × (4 × 6)
   = 5 × 24
   = 120
 ```
@@ -842,19 +603,20 @@ factorial(5)
 ### Another Example: Sum of Numbers
 
 Calculate the sum of all numbers from 1 to n.
+
 ```java
 public class SumRecursion {
-  
+
   public static int sum(int n) {
     // Base case
     if (n == 1) {
       return 1;
     }
-    
+
     // Recursive case
     return n + sum(n - 1);
   }
-  
+
   public static void main(String[] args) {
     int number = 5;
     System.out.println("Sum of 1 to " + number + " is: " + sum(number));
@@ -869,39 +631,18 @@ Sum of 1 to 5 is: 15
 
 ---
 
-### Recursion and Tree Traversal
-
-Remember the tree traversal code we saw in Part 3? That's recursion in action!
-
-Each traversal method calls itself to process the left and right subtrees:
-```java
-public static void inorderTraversal(int index) {
-  if (index >= tree.length || tree[index] == null) {
-    return;  // Base case: stop if out of bounds or null
-  }
-  
-  inorderTraversal(2 * index + 1);      // Recursive case: left subtree
-  System.out.print(tree[index] + " ");  // Process current node
-  inorderTraversal(2 * index + 2);      // Recursive case: right subtree
-}
-```
-
-This is why recursion is so natural for tree structures — trees are inherently recursive (each subtree is itself a tree).
-
----
-
 ### Recursion vs. Iteration
 
 Many problems can be solved using either recursion or iteration (loops). Here's a comparison:
 
 | Aspect | Recursion | Iteration |
 |--------|-----------|-----------|
-| **Readability** | Often clearer for hierarchical problems | Can be more straightforward for simple loops |
+| **Readability** | Often clearer for hierarchical problems | Simpler for counting and loops |
 | **Memory** | Uses call stack (more memory) | Uses less memory |
-| **Performance** | Can be slower due to function calls | Generally faster |
-| **Best For** | Trees, graphs, divide-and-conquer | Simple counting, sequential operations |
+| **Best For** | Trees, divide-and-conquer | Sequential operations |
 
-**Example - Same Problem, Different Approaches:**
+**Example — Same Problem, Two Approaches:**
+
 ```java
 // Recursive approach
 public static int factorialRecursive(int n) {
@@ -919,35 +660,31 @@ public static int factorialIterative(int n) {
 }
 ```
 
-Both produce the same result, but the recursive version is more elegant for this problem.
+Both produce the same result — recursion is more elegant for this type of problem.
 
 ---
 
-### Activity: Practice Recursion
+### Activity: Practice Recursion **(5 minutes)**
 
-Write a recursive Java method for the following:
+**Countdown:** Write a method `countdown(int n)` that prints numbers from `n` down to `1`, then prints `"Go!"`.
 
-1. **Fibonacci Sequence:** Calculate the nth Fibonacci number
-   - fibonacci(0) = 0
-   - fibonacci(1) = 1
-   - fibonacci(n) = fibonacci(n-1) + fibonacci(n-2)
+- Base case: if `n == 0`, print `"Go!"` and return
+- Recursive case: print `n`, then call `countdown(n - 1)`
+- Test with `countdown(5)` — expected output: `5 4 3 2 1 Go!`
 
-2. **Power Function:** Calculate x raised to the power of n (x^n)
-   - power(x, 0) = 1
-   - power(x, n) = x × power(x, n-1)
-
-Test your methods with different inputs and trace through the recursive calls.
+> 🔵 **Bonus:** Write a method `power(int x, int n)` that calculates `x` raised to the power of `n`.
+> - Base case: `power(x, 0) = 1`
+> - Recursive case: `power(x, n) = x × power(x, n-1)`
+> - Test with `power(2, 5)` — expected output: `32`
 
 ---
 
 ### Key Takeaways
-
 - **Recursion** is when a function calls itself to solve smaller instances of the same problem.
-- Every recursive function must have a **base case** to stop recursion and a **recursive case** to break down the problem.
-- Recursion is particularly useful for hierarchical structures like trees and divide-and-conquer algorithms.
-- Tree traversal naturally uses recursion because trees are recursive structures.
-- While recursion can be elegant, it uses more memory than iteration due to the call stack.
-- Understanding recursion is essential for mastering advanced data structures and algorithms.
+- Every recursive function must have a **base case** to stop and a **recursive case** to break the problem down.
+- Without a base case, you get a **stack overflow error**.
+- Recursion is particularly useful for hierarchical structures like trees.
+- For simple problems, iteration with a loop is often easier — recursion shines when problems are naturally hierarchical.
 
 ---
 
@@ -955,14 +692,57 @@ Test your methods with different inputs and trace through the recursive calls.
 
 In this lesson, we explored:
 
-1. **Non-Linear Data Structures** — Data organized hierarchically rather than sequentially
+1. **Non-Linear Data Structures** — Data organised hierarchically rather than sequentially
 2. **Trees** — Hierarchical structures with parent-child relationships
 3. **Binary Trees** — Trees where each node has at most two children
-4. **Searching Algorithms** — Linear Search (O(n)) and Binary Search (O(log n))
-5. **Sorting Algorithms** — Bubble Sort and Selection Sort (both O(n²))
+4. **Linear Search** — Simple sequential search that works on any dataset — O(n)
+5. **Bubble Sort** — Simple sorting by repeatedly swapping adjacent elements — O(n²)
 6. **Recursion** — Functions that call themselves to solve problems incrementally
 
 These concepts form the foundation for more advanced topics in data structures and algorithms, including Binary Search Trees, Heaps, Graph algorithms, and dynamic programming.
 
 ---
 
+## 🔵 Optional: Selection Sort
+
+> For students who finish early or want to explore further. Try this after completing all core activities.
+
+**Selection Sort** improves on Bubble Sort by reducing the number of swaps. Instead of comparing adjacent pairs repeatedly, it scans for the smallest element in the unsorted portion and moves it to the front in a single swap per pass.
+
+- **Concept:** Select the smallest element and move it to its correct position.
+- **Time Complexity:** O(n²) — still uses nested loops.
+- **Use Case:** When minimising data movement (swaps) is important.
+
+```java
+public class SelectionSortDemo {
+  public static void main(String[] args) {
+    int[] numbers = {64, 25, 12, 22, 11};
+    int n = numbers.length;
+
+    for (int i = 0; i < n - 1; i++) {
+      int minIndex = i;
+      for (int j = i + 1; j < n; j++) {
+        if (numbers[j] < numbers[minIndex]) {
+          minIndex = j;
+        }
+      }
+
+      int temp = numbers[minIndex];
+      numbers[minIndex] = numbers[i];
+      numbers[i] = temp;
+    }
+
+    System.out.print("Sorted array: ");
+    for (int num : numbers) {
+      System.out.print(num + " ");
+    }
+  }
+}
+```
+
+**Output:**
+```
+Sorted array: 11 12 22 25 64
+```
+
+Try running this on the same array from the Bubble Sort activity — `{45, 12, 89, 33, 67}` — and confirm both algorithms produce the same sorted result.
