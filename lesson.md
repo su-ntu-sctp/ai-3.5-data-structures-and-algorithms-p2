@@ -1,10 +1,10 @@
 # Lesson 3.5: Data Structures and Algorithms (Part 2)
 
 ## Lesson Overview
-This lesson continues the exploration of data structures and algorithms in Java. Students will learn about **non-linear data structures**, focusing on **Trees** and **Binary Trees**, which organize data in a hierarchical way rather than sequentially. The lesson also introduces fundamental algorithms such as **Searching**, **Sorting**, and **Recursion**, which form the foundation of efficient problem-solving in programming. By the end of this lesson, learners will understand how data can be represented beyond simple lists and how algorithms process such data efficiently.
+This lesson continues the exploration of data structures and algorithms in Java. Students will learn about **non-linear data structures**, focusing on **Trees** and **Binary Trees**, which organise data in a hierarchical way rather than sequentially. The lesson also introduces fundamental algorithms such as **Searching**, **Sorting**, and **Recursion**, which form the foundation of efficient problem-solving in programming. By the end of this lesson, learners will understand how data can be represented beyond simple lists and how algorithms process such data efficiently.
 
-**Module:** 3  
-**Duration:** 3 hours  
+**Module:** 3.5
+**Duration:** 3 hours
 **Prerequisites:** Completion of Lesson 3.4 (Linear Data Structures and Algorithms Part 1)
 
 ---
@@ -15,21 +15,34 @@ By the end of this lesson, students will be able to:
 - Describe the structure and characteristics of Trees and Binary Trees.
 - Implement Linear Search to locate elements in an array.
 - Implement Bubble Sort to arrange array elements in ascending order.
-- Explain what recursion is and write a simple recursive method.
+- Explain what recursion is and implement a simple recursive method.
+
+---
+
+## Connecting Back to Lesson 3.4
+
+In Lesson 3.4 we covered how to **store and organise data** using linear and hash-based structures. Now in Part 2 we focus on **processing that data** — how do you find it, how do you sort it, and how do you represent complex relationships that go beyond simple lists.
+
+| From 3.4 | What We Do With It in 3.5 |
+|----------|--------------------------|
+| Array | Linear Search, Bubble Sort |
+| ArrayList | Linear Search |
+| HashMap | Already O(1) lookup — no search algorithm needed |
+| TreeMap | Uses tree structure internally — connects to Trees concept |
 
 ---
 
 ## Part 1: Introduction to Non-Linear Data Structures
 
-In the previous lesson, we explored **linear data structures** such as arrays, lists, and hash-based collections, where elements are stored **sequentially** — one after another.  
+In the previous lesson, we explored **linear data structures** such as arrays, lists, and hash-based collections, where elements are stored **sequentially** — one after another.
 However, not all problems fit neatly into a linear order. Some require **hierarchical** or **network-like** relationships between data elements.
 
 This is where **non-linear data structures** come in.
 
 ### What Are Non-Linear Data Structures?
 
-In a **non-linear data structure**, data elements are **not arranged sequentially**. Instead, they are connected in a way that represents relationships like parent–child or node–connection.  
-This allows more complex data relationships and efficient solutions to problems like hierarchical representation (organization charts, file systems) or path finding (maps, graphs).
+In a **non-linear data structure**, data elements are **not arranged sequentially**. Instead, they are connected in a way that represents relationships like parent–child or node–connection.
+This allows more complex data relationships and efficient solutions to problems like hierarchical representation (organisation charts, file systems) or path finding (maps, graphs).
 
 | Feature | Linear Structure | Non-Linear Structure |
 |----------|------------------|----------------------|
@@ -101,7 +114,7 @@ Think of a tree like a **family tree** or a **folder structure** on your compute
 
 ### Visual Representation
 
-Here's an example of a simple tree representing an organization structure:
+Here's an example of a simple tree representing an organisation structure:
 
 ```mermaid
 graph TD
@@ -132,83 +145,30 @@ graph TD
 
 ---
 
-### Understanding Trees in Java (Conceptual)
+### Trees in Java
 
-Java does not provide a built-in `Tree` class, but it provides **TreeMap** and **TreeSet** which use internal tree structures (Red-Black Trees) to maintain sorted data.  
-At this stage, we focus on **understanding how trees work conceptually**, rather than implementing complex versions.
+Unlike HashMap, HashSet, ArrayList and other structures from Lesson 3.4, **Java does not provide a built-in Tree class** in the Collections Framework. There is no `Tree` or `BinaryTree` you can simply import and use.
 
-Let's simulate a simple tree using nested arrays (since classes are not yet taught):
+Java does provide **TreeMap** and **TreeSet** — but these use a tree structure (Red-Black Tree) **internally** to keep data sorted. As a developer you never interact with the tree structure underneath — you just use them as a sorted Map or Set.
 
-```java
-public class SimpleTree {
-  public static void main(String[] args) {
+If you need a true tree structure in a real project, you build it yourself using classes and OOP — where each node becomes an object with references to its children.
 
-    // Representing a simple organizational tree using arrays
-    String root = "CEO";
-    String[] level1 = {"Manager1", "Manager2"};
-    String[] level2_manager1 = {"Dev1", "Dev2"};
-    String[] level2_manager2 = {"Tester1"};
-
-    System.out.println("Root Node: " + root);
-
-    System.out.println("\nChildren of " + root + ":");
-    for (String manager : level1) {
-      System.out.println("  - " + manager);
-    }
-
-    System.out.println("\nChildren of Manager1:");
-    for (String dev : level2_manager1) {
-      System.out.println("  - " + dev);
-    }
-
-    System.out.println("\nChildren of Manager2:");
-    for (String tester : level2_manager2) {
-      System.out.println("  - " + tester);
-    }
-  }
-}
-```
-
-**Output:**
-```
-Root Node: CEO
-
-Children of CEO:
-  - Manager1
-  - Manager2
-
-Children of Manager1:
-  - Dev1
-  - Dev2
-
-Children of Manager2:
-  - Tester1
-```
-
-This simple example demonstrates the hierarchical structure of a tree — each node may have multiple child nodes, and data is not stored sequentially but in parent–child relationships.
-
-### Activity: Build Your Own Tree **(5 minutes)**
-
-Write a Java program to represent a **school structure** using arrays:
-- Root node: `"Principal"`
-- Children: `"Teacher1"`, `"Teacher2"`
-- Each teacher has two students
-- Display all nodes in a clear hierarchical format
+> 💡 **Key Takeaway:** Trees are a concept. Java gives you tree-powered tools (TreeMap, TreeSet) but not a raw tree to work with directly. Understanding the concept is what matters here.
 
 ---
 
 ### Key Takeaways
 - A **Tree** is a hierarchical, non-linear structure made of nodes and edges.
 - It starts with a **root node** and expands into **subtrees**.
-- Trees are widely used in real-world applications such as file systems, databases, and organizational hierarchies.
-- In Java, conceptual tree structures can be simulated using arrays or later implemented using custom node classes once OOP is covered.
+- Trees are widely used in real-world applications such as file systems, databases, and organisational hierarchies.
+- Java does not have a built-in Tree class — TreeMap and TreeSet use trees internally but don't expose the structure directly.
 
 ---
 
 ## Part 3: Binary Trees
 
-A **Binary Tree** is a special type of tree in which each node can have **at most two children** — a **left child** and a **right child**.  
-This restriction makes binary trees simpler to implement and efficient for operations such as searching and sorting.  
+A **Binary Tree** is a special type of tree in which each node can have **at most two children** — a **left child** and a **right child**.
+This restriction makes binary trees simpler to implement and efficient for operations such as searching and sorting.
 Binary Trees are one of the most widely used data structures in computer science. They form the foundation of structures such as **Binary Search Trees**, **Heaps**, and **Syntax Trees** in compilers.
 
 ---
@@ -259,81 +219,25 @@ graph TD
 
 ---
 
-### Representing a Binary Tree in Java (Conceptual)
+### Binary Trees in Java
 
-We will use parallel arrays to represent the parent–child relationships of a binary tree.
+Just like general Trees, **Java has no built-in Binary Tree class**. The Collections Framework does not include one because trees have too many variations — Binary Tree, Binary Search Tree, AVL Tree, Red-Black Tree — each with different rules and use cases. Java could not standardise a single implementation so it was left to developers to build their own.
 
-```java
-public class SimpleBinaryTree {
-  public static void main(String[] args) {
-
-    // Representing nodes of a binary tree using arrays
-    int[] nodes = {10, 5, 15, 2, 7, 12, 20};
-    String[] leftChild = {"5", "2", "12", "null", "null", "null", "null"};
-    String[] rightChild = {"15", "7", "20", "null", "null", "null", "null"};
-
-    System.out.println("Binary Tree Nodes and Their Children:\n");
-
-    for (int i = 0; i < nodes.length; i++) {
-      System.out.println("Node " + nodes[i] +
-                         " -> Left: " + leftChild[i] +
-                         ", Right: " + rightChild[i]);
-    }
-  }
-}
-```
-
-**Output:**
-```
-Binary Tree Nodes and Their Children:
-
-Node 10 -> Left: 5, Right: 15
-Node 5 -> Left: 2, Right: 7
-Node 15 -> Left: 12, Right: 20
-Node 2 -> Left: null, Right: null
-Node 7 -> Left: null, Right: null
-Node 12 -> Left: null, Right: null
-Node 20 -> Left: null, Right: null
-```
-
-This approach helps visualise how binary tree nodes are connected logically through left and right links. Later, when students learn classes, they can represent each node as an object with left and right references.
+> 💡 **Real World Connection:** When you use `TreeMap` or `TreeSet` in Java, a Red-Black Tree (a self-balancing Binary Tree) is working behind the scenes. You get the benefits of a tree — sorted data, O(log n) performance — without building it yourself.
 
 ---
 
 ### Key Takeaways
-- A Binary Tree is a hierarchical structure where each node can have at most two children.
-- Binary Trees are used as the basis for Binary Search Trees, Heaps, and Expression Trees.
-- Understanding binary trees helps in mastering more complex algorithms such as searching and recursion.
+- A Binary Tree is a hierarchical structure where each node has at most two children — left and right.
+- Binary Trees are the foundation of Binary Search Trees, Heaps, and Expression Trees.
+- Java has no built-in Binary Tree — developers implement their own using OOP when needed.
+- TreeMap and TreeSet are powered by Binary Trees internally.
 
 ---
 
 ## Part 4: Algorithms — Searching
 
-An **algorithm** is a step-by-step procedure to solve a problem. In the context of data structures, algorithms are used to perform operations such as searching, sorting, and traversing data efficiently.  
-In this section, we focus on **searching algorithms**, which are used to find the position of a specific element within a collection such as an array or a list.
-
----
-
-### Understanding Algorithm Efficiency
-
-Before we dive into searching algorithms, it's important to understand how we measure their performance.
-
-> **📊 Algorithm Efficiency — Big O Notation:**
->
-> When we write **O(n)** or **O(log n)**, we're measuring how the algorithm's speed changes as data grows:
->
-> - **O(1)** = **Constant time** — Always the same speed, regardless of data size (e.g., accessing an array element by index)
-> - **O(n)** = **Linear time** — Time grows proportionally with data size (e.g., checking every element in a list)
-> - **O(log n)** = **Logarithmic time** — Much faster; divides the problem in half repeatedly
-> - **O(n²)** = **Quadratic time** — Time grows with the square of data size (e.g., nested loops)
->
-> **Example:** If you have 100 items:
-> - O(1) takes the same time regardless of size
-> - O(n) takes 100 steps
-> - O(log n) takes about 7 steps
-> - O(n²) takes 10,000 steps
->
-> Lower complexity = faster algorithm for large datasets!
+An **algorithm** is a step-by-step procedure to solve a problem. In the context of data structures, algorithms are used to perform operations such as searching, sorting, and traversing data efficiently.
 
 ---
 
@@ -345,13 +249,11 @@ Searching is the process of checking whether a particular element exists in a co
 
 ### Linear Search
 
-A **Linear Search** (also known as a sequential search) checks each element in a list one by one until the desired element is found or the list ends.  
-It is the simplest and most straightforward searching algorithm.
+A **Linear Search** checks each element in a list one by one until the desired element is found or the list ends. It is the simplest searching algorithm and works on both sorted and unsorted data.
 
-- **Concept:** Start from the first element and compare it with the target value.
-- **Best case:** The element is found at the first position.
-- **Worst case:** The element is not found, or it is the last one — O(n) complexity.
-- **Use case:** Works on both sorted and unsorted lists.
+- **Best case:** Element found at the first position — O(1)
+- **Worst case:** Element not found or at the last position — O(n)
+- **Use case:** Works on any dataset, sorted or unsorted
 
 ```java
 public class LinearSearchDemo {
@@ -382,7 +284,7 @@ Element found at index: 2
 
 ---
 
-### Activity: Implement Linear Search **(5 minutes)**
+### 👨‍💻 Activity: Implement Linear Search **(5 minutes)**
 
 - Create a new file `SearchDemo.java`
 - Declare an array of 8 integers: `{2, 5, 8, 12, 16, 23, 38, 45}`
@@ -392,40 +294,26 @@ Element found at index: 2
 ---
 
 ### Key Takeaways
-- Searching algorithms help locate elements in a collection efficiently.
-- **Linear Search** checks each element one by one and works on any dataset — sorted or unsorted.
-- It is simple to implement and perfectly sufficient for small datasets.
+- **Linear Search** checks each element one by one — O(n) worst case.
+- Simple to implement and works on any dataset.
+- For fast lookups use **HashMap** — O(1). Linear Search is for when you don't have a key.
 
 ---
 
 ## Part 5: Algorithms — Sorting
 
-Sorting is the process of arranging data in a particular order — typically ascending or descending.  
-Efficient sorting improves the performance of other operations such as searching and data retrieval.
-
----
-
-### What Is Sorting?
-
-Sorting algorithms organise the elements of a list so they can be processed or searched efficiently.
-
-- **Ascending Order:** From smallest to largest (e.g., 1, 3, 5, 7)
-- **Descending Order:** From largest to smallest (e.g., 7, 5, 3, 1)
-- **Goal:** Reduce the time it takes to find or compare elements
-- **Key Idea:** Compare elements and swap them into the correct position
+Sorting is the process of arranging data in a particular order — typically ascending or descending. Efficient sorting improves the performance of other operations such as searching and data retrieval.
 
 ---
 
 ### Bubble Sort
 
-Bubble Sort is the simplest sorting algorithm. It repeatedly compares adjacent elements and swaps them if they are in the wrong order.  
-After each pass, the largest element "bubbles up" to the end of the list.
+Bubble Sort is the simplest sorting algorithm. It repeatedly compares adjacent elements and swaps them if they are in the wrong order. After each pass, the largest element "bubbles up" to the end of the list.
 
-- **Concept:** Repeatedly compare adjacent pairs and swap if needed.
-- **Time Complexity:** O(n²) — because of nested loops.
-- **Best Case:** When the list is already sorted.
-- **Worst Case:** When the list is completely unsorted.
-- **Use Case:** Educational use and small data sets.
+- **Time Complexity:** O(n²) — nested loops
+- **Best Case:** List is already sorted
+- **Worst Case:** List is completely unsorted
+- **Use Case:** Learning and small datasets
 
 ```java
 public class BubbleSortDemo {
@@ -480,12 +368,7 @@ graph TD
 
 ### Other Sorting Algorithms (Awareness Only — No Coding Required)
 
-You don't need to implement these today, but it's good to know they exist. These algorithms are faster for large datasets and use more advanced techniques internally:
-
-- **Selection Sort:** Finds the smallest element and moves it to the correct position each pass.
-- **Insertion Sort:** Builds the sorted list one element at a time. Efficient for small or nearly sorted datasets.
-- **Merge Sort:** Uses divide-and-conquer to split the array and merge in sorted order.
-- **Quick Sort:** Selects a pivot element to partition the array. Very efficient on large datasets.
+These algorithms are faster for large datasets. You don't need to implement them today but it's important to know they exist.
 
 | Algorithm | Time Complexity | Best For |
 |------------|-----------------|----------|
@@ -495,9 +378,11 @@ You don't need to implement these today, but it's good to know they exist. These
 | **Merge Sort** | O(n log n) | Large datasets |
 | **Quick Sort** | O(n log n) average | General-purpose fast sorting |
 
+> 💡 **Real World Note:** In production Java code, you would never write your own sort. You'd use `Collections.sort()` or `Arrays.sort()` which use highly optimised versions of these algorithms internally. Understanding Bubble Sort teaches you *why* sorting is expensive — so you appreciate what Java is doing for you.
+
 ---
 
-### Activity: Implement Bubble Sort **(5 minutes)**
+### 👨‍💻 Activity: Implement Bubble Sort **(5 minutes)**
 
 - Create a new file `SortDemo.java`
 - Declare this array: `{45, 12, 89, 33, 67}`
@@ -507,205 +392,153 @@ You don't need to implement these today, but it's good to know they exist. These
 ---
 
 ### Key Takeaways
-- Sorting organises data to make searching and comparison faster.
-- **Bubble Sort** repeatedly swaps adjacent elements until the list is sorted.
-- Nested loops give Bubble Sort an O(n²) time complexity.
-- Faster algorithms like Merge Sort and Quick Sort exist for larger datasets.
+- **Bubble Sort** repeatedly swaps adjacent elements until sorted — O(n²).
+- Nested loops are the reason for O(n²) — avoid for large datasets.
+- In real projects use `Collections.sort()` or `Arrays.sort()` — built-in and optimised.
 
 ---
 
 ## Part 6: Recursion
 
-**Recursion** is a programming technique where a function calls itself to solve a problem by breaking it down into smaller, simpler versions of the same problem.  
-Recursion is a fundamental concept in computer science and is particularly powerful when working with hierarchical data structures like trees.
+**Recursion** is a programming technique where a method calls itself to solve a problem by breaking it into smaller versions of the same problem.
 
 ---
 
-### What Is Recursion?
+### The Two Rules of Recursion
 
-Recursion occurs when a function invokes itself during its execution. Each recursive call works on a smaller portion of the problem until it reaches a **base case** — a condition where the function stops calling itself and returns a result.
-
-Think of recursion like a set of **Russian nesting dolls**:
-- You open one doll (solve one part of the problem)
-- Inside is another smaller doll (a simpler version of the same problem)
-- You keep opening dolls until you reach the smallest one that doesn't open (the base case)
-
----
-
-### Key Components of Recursion
-
-Every recursive function must have two essential components:
+Every recursive method must have exactly two things:
 
 | Component | Description |
 |-----------|-------------|
-| **Base Case** | The stopping condition that prevents infinite recursion. When reached, the function returns a value without making another recursive call. |
-| **Recursive Case** | The part where the function calls itself with a simpler or smaller input, moving toward the base case. |
+| **Base Case** | The stopping condition. When reached, the method returns without calling itself again. |
+| **Recursive Case** | The method calls itself with a smaller or simpler input, moving toward the base case. |
 
-Without a base case, the function would call itself forever, causing a **stack overflow error**.
+> ⚠️ Without a base case the method calls itself forever — causing a **StackOverflowError**.
 
 ---
 
-### Simple Example: Factorial
+### Real World Connection
 
-The factorial of a number `n` (written as `n!`) is the product of all positive integers from 1 to n.
+Think about how your OS calculates the size of a folder:
+- Open folder → check all files → for each subfolder, open it and do the same thing
+- Each subfolder triggers the same operation on a smaller problem
+- Stops when there are no more subfolders — that's the base case
 
-**Mathematical Definition:**
-- 5! = 5 × 4 × 3 × 2 × 1 = 120
-- 3! = 3 × 2 × 1 = 6
-- 1! = 1
-- 0! = 1 (by definition)
+This is recursion. The same operation applied repeatedly on smaller inputs until a stopping condition is met.
+
+---
+
+### Example: Fibonacci Sequence
+
+The Fibonacci sequence is a classic example where recursion maps naturally to the problem definition:
+
+```
+0, 1, 1, 2, 3, 5, 8, 13, 21, 34...
+Each number = sum of the two before it
+```
 
 **Recursive Definition:**
-- factorial(n) = n × factorial(n - 1)
-- factorial(0) = 1 (base case)
+- `fibonacci(0)` = 0 (base case)
+- `fibonacci(1)` = 1 (base case)
+- `fibonacci(n)` = `fibonacci(n-1)` + `fibonacci(n-2)` (recursive case)
 
 ```java
-public class RecursionDemo {
+public class FibonacciDemo {
 
-  // Recursive method to calculate factorial
-  public static int factorial(int n) {
-    // Base case: stop recursion when n is 0 or 1
-    if (n == 0 || n == 1) {
-      return 1;
-    }
+  public static int fibonacci(int n) {
+    // Base cases
+    if (n == 0) return 0;
+    if (n == 1) return 1;
 
-    // Recursive case: n! = n × (n-1)!
-    return n * factorial(n - 1);
+    // Recursive case — each call breaks into two smaller calls
+    return fibonacci(n - 1) + fibonacci(n - 2);
   }
 
   public static void main(String[] args) {
-    int number = 5;
-    int result = factorial(number);
-    System.out.println("Factorial of " + number + " is: " + result);
-  }
-}
-```
-
-**Output:**
-```
-Factorial of 5 is: 120
-```
-
-**How It Works:**
-```
-factorial(5)
-  = 5 × factorial(4)
-  = 5 × (4 × factorial(3))
-  = 5 × (4 × (3 × factorial(2)))
-  = 5 × (4 × (3 × (2 × factorial(1))))
-  = 5 × (4 × (3 × (2 × 1)))
-  = 5 × 24
-  = 120
-```
-
----
-
-### Another Example: Sum of Numbers
-
-Calculate the sum of all numbers from 1 to n.
-
-```java
-public class SumRecursion {
-
-  public static int sum(int n) {
-    // Base case
-    if (n == 1) {
-      return 1;
+    System.out.println("Fibonacci sequence:");
+    for (int i = 0; i <= 10; i++) {
+      System.out.print(fibonacci(i) + " ");
     }
-
-    // Recursive case
-    return n + sum(n - 1);
-  }
-
-  public static void main(String[] args) {
-    int number = 5;
-    System.out.println("Sum of 1 to " + number + " is: " + sum(number));
+    // Output: 0 1 1 2 3 5 8 13 21 34 55
   }
 }
 ```
 
-**Output:**
+**How It Works for fibonacci(5):**
 ```
-Sum of 1 to 5 is: 15
+fibonacci(5)
+  = fibonacci(4) + fibonacci(3)
+  = (fibonacci(3) + fibonacci(2)) + (fibonacci(2) + fibonacci(1))
+  = ... keeps breaking down until it hits base cases 0 and 1
+  = 5
 ```
 
 ---
 
-### Recursion vs. Iteration
+### The Big O Conversation
 
-Many problems can be solved using either recursion or iteration (loops). Here's a comparison:
+This is where it gets interesting for experienced developers:
 
-| Aspect | Recursion | Iteration |
-|--------|-----------|-----------|
-| **Readability** | Often clearer for hierarchical problems | Simpler for counting and loops |
-| **Memory** | Uses call stack (more memory) | Uses less memory |
-| **Best For** | Trees, divide-and-conquer | Sequential operations |
-
-**Example — Same Problem, Two Approaches:**
-
-```java
-// Recursive approach
-public static int factorialRecursive(int n) {
-  if (n <= 1) return 1;
-  return n * factorialRecursive(n - 1);
-}
-
-// Iterative approach
-public static int factorialIterative(int n) {
-  int result = 1;
-  for (int i = 2; i <= n; i++) {
-    result *= i;
-  }
-  return result;
-}
+```
+fibonacci(5)  →  calls itself ~15 times
+fibonacci(10) →  calls itself ~177 times
+fibonacci(50) →  calls itself ~2 trillion times  ← danger zone
 ```
 
-Both produce the same result — recursion is more elegant for this type of problem.
+Naive recursive Fibonacci is **O(2^n)** — exponential. It recalculates the same values over and over. This is why in production code you would use **memoization** (caching results) or an iterative approach instead.
+
+> 💡 **Key Insight:** Recursion is elegant and readable. But always ask — what is the time complexity? Fibonacci looks simple but scales terribly without optimisation. This is exactly the kind of trade-off a modern engineer needs to recognise.
 
 ---
 
-### Activity: Practice Recursion **(5 minutes)**
+### 👨‍💻 Activity: Practice Recursion **(5 minutes)**
 
-**Countdown:** Write a method `countdown(int n)` that prints numbers from `n` down to `1`, then prints `"Go!"`.
+Write a recursive method `sumDigits(int n)` that calculates the sum of all digits in a number.
 
-- Base case: if `n == 0`, print `"Go!"` and return
-- Recursive case: print `n`, then call `countdown(n - 1)`
-- Test with `countdown(5)` — expected output: `5 4 3 2 1 Go!`
+- `sumDigits(123)` → `1 + 2 + 3` = `6`
+- `sumDigits(9045)` → `9 + 0 + 4 + 5` = `18`
 
-> 🔵 **Bonus:** Write a method `power(int x, int n)` that calculates `x` raised to the power of `n`.
-> - Base case: `power(x, 0) = 1`
-> - Recursive case: `power(x, n) = x × power(x, n-1)`
-> - Test with `power(2, 5)` — expected output: `32`
+**Hints:**
+- Base case: if `n < 10` return `n`
+- Recursive case: last digit is `n % 10`, remaining number is `n / 10`
 
 ---
 
 ### Key Takeaways
-- **Recursion** is when a function calls itself to solve smaller instances of the same problem.
-- Every recursive function must have a **base case** to stop and a **recursive case** to break the problem down.
-- Without a base case, you get a **stack overflow error**.
-- Recursion is particularly useful for hierarchical structures like trees.
-- For simple problems, iteration with a loop is often easier — recursion shines when problems are naturally hierarchical.
+- Recursion is a method calling itself with a smaller input until a base case is reached.
+- Always define a base case — without it you get a **StackOverflowError**.
+- Recursion is elegant for hierarchical problems but watch the time complexity.
+- Naive recursive solutions can be exponentially slow — always consider the trade-off.
 
 ---
 
 ## Lesson Summary
 
-In this lesson, we explored:
-
-1. **Non-Linear Data Structures** — Data organised hierarchically rather than sequentially
-2. **Trees** — Hierarchical structures with parent-child relationships
-3. **Binary Trees** — Trees where each node has at most two children
-4. **Linear Search** — Simple sequential search that works on any dataset — O(n)
-5. **Bubble Sort** — Simple sorting by repeatedly swapping adjacent elements — O(n²)
-6. **Recursion** — Functions that call themselves to solve problems incrementally
-
-These concepts form the foundation for more advanced topics in data structures and algorithms, including Binary Search Trees, Heaps, Graph algorithms, and dynamic programming.
+| Concept | What It Is | Key Point |
+|---------|-----------|-----------|
+| Trees | Hierarchical non-linear structure | No built-in Java class — build with OOP |
+| Binary Trees | Tree where each node has at most 2 children | Foundation of TreeMap and TreeSet internally |
+| Linear Search | Check elements one by one | O(n) — simple but slow for large data |
+| Bubble Sort | Swap adjacent elements repeatedly | O(n²) — use Collections.sort() in production |
+| Recursion | Method calls itself | Always need a base case — watch time complexity |
 
 ---
 
-## 🔵 Optional: Selection Sort
+## Connecting Data Structures to Algorithms
 
-> For students who finish early or want to explore further. Try this after completing all core activities.
+| Operation | Best Data Structure | Algorithm / Method | Time Complexity |
+|-----------|--------------------|--------------------|-----------------|
+| Search by value | Array / ArrayList | Linear Search | O(n) |
+| Search by key | HashMap | Direct lookup `.get()` | O(1) |
+| Sorted lookup | TreeMap | Internal tree traversal | O(log n) |
+| Sort elements | Array | Bubble Sort / Arrays.sort() | O(n²) / O(n log n) |
+| Hierarchical data | Build with OOP | Tree / Binary Tree | Varies |
+
+---
+
+## 🔵 Optional: Recursion — Selection Sort
+
+> For students who finish early or want to explore further.
 
 **Selection Sort** improves on Bubble Sort by reducing the number of swaps. Instead of comparing adjacent pairs repeatedly, it scans for the smallest element in the unsorted portion and moves it to the front in a single swap per pass.
 
@@ -746,3 +579,7 @@ Sorted array: 11 12 22 25 64
 ```
 
 Try running this on the same array from the Bubble Sort activity — `{45, 12, 89, 33, 67}` — and confirm both algorithms produce the same sorted result.
+
+---
+
+**End of Lesson 3.5**
