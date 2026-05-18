@@ -536,7 +536,7 @@ Write a recursive method `sumDigits(int n)` that calculates the sum of all digit
 
 ---
 
-## 🔵 Optional: Recursion — Selection Sort
+## Selection Sort(Optional):
 
 > For students who finish early or want to explore further.
 
