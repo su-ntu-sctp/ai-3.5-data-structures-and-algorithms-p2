@@ -16,10 +16,6 @@ Create a program called AlgorithmsAssignment.java and solve the following proble
    - Sort the array using both methods and display the sorted array for each.
    
 
-3. **Recursion Problems**
-   - Write a recursive method to calculate the factorial of a number (e.g., factorial of 5 = 120).
-   - Write a recursive method to calculate the sum of numbers from 1 to n (e.g., sum(5) = 1+2+3+4+5 = 15).
-   
 ## Submission (Optional)
 
 - Submit the URL of the GitHub Repository that contains your work to NTU black board.

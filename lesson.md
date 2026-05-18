@@ -1,7 +1,7 @@
 # Lesson 3.5: Data Structures and Algorithms (Part 2)
 
 ## Lesson Overview
-This lesson continues the exploration of data structures and algorithms in Java. Students will learn about **non-linear data structures**, focusing on **Trees** and **Binary Trees**, which organise data in a hierarchical way rather than sequentially. The lesson also introduces fundamental algorithms such as **Searching**, **Sorting**, and **Recursion**, which form the foundation of efficient problem-solving in programming. By the end of this lesson, learners will understand how data can be represented beyond simple lists and how algorithms process such data efficiently.
+This lesson continues the exploration of data structures and algorithms in Java. Students will learn about **non-linear data structures**, focusing on **Trees**, **Binary Trees**, and **Binary Search Trees**, which organise data in a hierarchical way rather than sequentially. The lesson also introduces fundamental algorithms — **Linear Search**, **Binary Search**, and **Bubble Sort** — which form the foundation of efficient problem-solving in programming. By the end of this lesson, learners will understand how data can be represented beyond simple lists and how algorithms process such data efficiently.
 
 **Module:** 3.5
 **Duration:** 3 hours
@@ -11,11 +11,12 @@ This lesson continues the exploration of data structures and algorithms in Java.
 
 ## Lesson Objectives
 By the end of this lesson, students will be able to:
-- Differentiate between linear and non-linear data structures.
-- Describe the structure and characteristics of Trees and Binary Trees.
+- Differentiate between linear, hash-based, and non-linear data structures.
+- Describe the structure and characteristics of Trees, Binary Trees, and Binary Search Trees.
 - Implement Linear Search to locate elements in an array.
+- Implement Binary Search and explain why it requires sorted data.
+- Compare Linear Search and Binary Search using Big O notation.
 - Implement Bubble Sort to arrange array elements in ascending order.
-- Explain what recursion is and implement a simple recursive method.
 
 ---
 
@@ -25,24 +26,38 @@ In Lesson 3.4 we covered how to **store and organise data** using linear and has
 
 | From 3.4 | What We Do With It in 3.5 |
 |----------|--------------------------|
-| Array | Linear Search, Bubble Sort |
+| Array | Linear Search, Binary Search, Bubble Sort |
 | ArrayList | Linear Search |
 | HashMap | Already O(1) lookup — no search algorithm needed |
-| TreeMap | Uses tree structure internally — connects to Trees concept |
+| TreeMap / TreeSet | Uses Binary Search Tree internally — connects to BST concept |
 
 ---
 
 ## Part 1: Introduction to Non-Linear Data Structures
 
-In the previous lesson, we explored **linear data structures** such as arrays, lists, and hash-based collections, where elements are stored **sequentially** — one after another.
-However, not all problems fit neatly into a linear order. Some require **hierarchical** or **network-like** relationships between data elements.
+In the previous lesson, we explored **linear data structures** such as Arrays, ArrayList, and LinkedList, where elements are stored **sequentially** — one after another. However, not all problems fit neatly into a linear order. Some require **hierarchical** or **network-like** relationships between data elements.
 
 This is where **non-linear data structures** come in.
 
+---
+
+### The Three Categories of Data Structures
+
+It is important to understand that data structures fall into **three categories** — not two:
+
+| Category | Structures | How Data is Stored |
+|----------|-----------|-------------------|
+| **Linear** | Array, ArrayList, LinkedList | Sequentially, one after another |
+| **Hash-Based** | HashMap, HashSet and variants | By hash code — no sequence, no hierarchy |
+| **Non-Linear** | Tree, Binary Tree, Graph | Hierarchically or as a network |
+
+Hash-based structures are neither linear nor non-linear — they are their own category. Elements are stored based on their **hash code**, which is why HashMap and HashSet have no guaranteed order.
+
+---
+
 ### What Are Non-Linear Data Structures?
 
-In a **non-linear data structure**, data elements are **not arranged sequentially**. Instead, they are connected in a way that represents relationships like parent–child or node–connection.
-This allows more complex data relationships and efficient solutions to problems like hierarchical representation (organisation charts, file systems) or path finding (maps, graphs).
+In a **non-linear data structure**, data elements are **not arranged sequentially**. Instead, they are connected in a way that represents relationships like parent–child or node–connection. This allows more complex data relationships and efficient solutions to problems like hierarchical representation (organisation charts, file systems) or path finding (maps, graphs).
 
 | Feature | Linear Structure | Non-Linear Structure |
 |----------|------------------|----------------------|
@@ -91,10 +106,10 @@ graph LR
 
 A **Tree** is a non-linear data structure that represents data in a **hierarchical** manner. It is made up of **nodes** connected by **edges**. Each node can have **zero or more child nodes**, forming parent–child relationships.
 
-Think of a tree like a **family tree** or a **folder structure** on your computer:
+Think of a tree like a **folder structure** on your computer:
 - The **root** is the starting point (e.g., "C Drive").
 - Each **folder** can contain subfolders (children).
-- The **leaves** are folders or files that don't have anything inside.
+- The **leaves** are files or empty folders with nothing inside.
 
 ---
 
@@ -114,16 +129,14 @@ Think of a tree like a **family tree** or a **folder structure** on your compute
 
 ### Visual Representation
 
-Here's an example of a simple tree representing an organisation structure:
-
 ```mermaid
 graph TD
-    CEO[CEO<br/>Root Node]
-    M1[Manager1]
-    M2[Manager2]
-    D1[Dev1<br/>Leaf]
-    D2[Dev2<br/>Leaf]
-    T1[Tester1<br/>Leaf]
+    CEO[CEO<br/>Root Node<br/>Level 0]
+    M1[Manager1<br/>Level 1]
+    M2[Manager2<br/>Level 1]
+    D1[Dev1<br/>Leaf - Level 2]
+    D2[Dev2<br/>Leaf - Level 2]
+    T1[Tester1<br/>Leaf - Level 2]
 
     CEO --> M1
     CEO --> M2
@@ -131,60 +144,55 @@ graph TD
     M1 --> D2
     M2 --> T1
 
-    style CEO fill:#e3f2fd
+    style CEO fill:#bbdefb
     style M1 fill:#e3f2fd
     style M2 fill:#e3f2fd
-    style D1 fill:#e3f2fd
-    style D2 fill:#e3f2fd
-    style T1 fill:#e3f2fd
+    style D1 fill:#e8f5e9
+    style D2 fill:#e8f5e9
+    style T1 fill:#e8f5e9
 ```
 
-- **CEO** → Root node
-- **Manager1**, **Manager2** → Child nodes of CEO
-- **Dev1**, **Dev2**, **Tester1** → Leaf nodes (no children)
+- **CEO** → Root node (Level 0)
+- **Manager1, Manager2** → Child nodes of CEO (Level 1)
+- **Dev1, Dev2, Tester1** → Leaf nodes — no children (Level 2)
 
 ---
 
 ### Trees in Java
 
-Unlike HashMap, HashSet, ArrayList and other structures from Lesson 3.4, **Java does not provide a built-in Tree class** in the Collections Framework. There is no `Tree` or `BinaryTree` you can simply import and use.
+Unlike HashMap, HashSet, ArrayList and other structures from Lesson 3.4, **Java does not provide a built-in Tree class** in the Collections Framework. There is no `Tree` you can simply import and use.
 
-Java does provide **TreeMap** and **TreeSet** — but these use a tree structure (Red-Black Tree) **internally** to keep data sorted. As a developer you never interact with the tree structure underneath — you just use them as a sorted Map or Set.
+Java does provide **TreeMap** and **TreeSet** — but these use a tree structure internally to keep data sorted. As a developer you never interact with the tree structure underneath — you just use them as a sorted Map or Set.
 
 If you need a true tree structure in a real project, you build it yourself using classes and OOP — where each node becomes an object with references to its children.
 
-> 💡 **Key Takeaway:** Trees are a concept. Java gives you tree-powered tools (TreeMap, TreeSet) but not a raw tree to work with directly. Understanding the concept is what matters here.
+> 💡 **Key Takeaway:** Java gives you tree-powered tools (TreeMap, TreeSet) but not a raw tree to work with directly. Understanding the concept is what matters here.
 
 ---
 
 ### Key Takeaways
 - A **Tree** is a hierarchical, non-linear structure made of nodes and edges.
-- It starts with a **root node** and expands into **subtrees**.
-- Trees are widely used in real-world applications such as file systems, databases, and organisational hierarchies.
-- Java does not have a built-in Tree class — TreeMap and TreeSet use trees internally but don't expose the structure directly.
+- Trees are widely used in file systems, databases, and organisational hierarchies.
+- Java has no built-in Tree class — TreeMap and TreeSet use trees internally but don't expose the structure directly.
 
 ---
 
 ## Part 3: Binary Trees
 
-A **Binary Tree** is a special type of tree in which each node can have **at most two children** — a **left child** and a **right child**.
-This restriction makes binary trees simpler to implement and efficient for operations such as searching and sorting.
-Binary Trees are one of the most widely used data structures in computer science. They form the foundation of structures such as **Binary Search Trees**, **Heaps**, and **Syntax Trees** in compilers.
+A **Binary Tree** is a special type of tree in which each node can have **at most two children** — a **left child** and a **right child**. This restriction makes binary trees simpler to implement and efficient for operations such as searching and sorting.
 
 ---
 
 ### Characteristics of a Binary Tree
-- Each node can have **0, 1, or 2 children**.
+- Each node can have **0, 1, or 2 children** maximum.
 - The topmost node is called the **root node**.
-- Every node connects downward to its children through **left** and **right** links.
+- Every node connects downward through **left** and **right** links.
 - Nodes with no children are called **leaf nodes**.
-- Binary trees can grow in depth (levels), where each level doubles the number of potential nodes.
+- Each level of the tree can hold double the nodes of the level above.
 
 ---
 
 ### Visual Example
-
-Below is a simple representation of a binary tree that stores numeric values:
 
 ```mermaid
 graph TD
@@ -203,57 +211,139 @@ graph TD
     N15 --> N12
     N15 --> N20
 
-    style N10 fill:#e3f2fd
+    style N10 fill:#bbdefb
     style N5 fill:#e3f2fd
     style N15 fill:#e3f2fd
-    style N2 fill:#e3f2fd
-    style N7 fill:#e3f2fd
-    style N12 fill:#e3f2fd
-    style N20 fill:#e3f2fd
+    style N2 fill:#e8f5e9
+    style N7 fill:#e8f5e9
+    style N12 fill:#e8f5e9
+    style N20 fill:#e8f5e9
 ```
 
 - 10 is the root.
-- 5 and 15 are the children of 10.
+- 5 and 15 are the left and right children of 10.
 - 2, 7, 12, and 20 are leaf nodes.
-- Every node has at most two children.
+- Every node has **at most two children**.
+
+> 💡 **Notice:** This Binary Tree also happens to follow a pattern — left values are smaller than the parent, right values are larger. This is not a rule of Binary Trees in general, but it is the rule of a special type called a **Binary Search Tree**, covered next.
 
 ---
 
 ### Binary Trees in Java
 
-Just like general Trees, **Java has no built-in Binary Tree class**. The Collections Framework does not include one because trees have too many variations — Binary Tree, Binary Search Tree, AVL Tree, Red-Black Tree — each with different rules and use cases. Java could not standardise a single implementation so it was left to developers to build their own.
+Just like general Trees, **Java has no built-in Binary Tree class**. The Collections Framework does not include one because trees have too many variations — Binary Tree, Binary Search Tree, AVL Tree, Red-Black Tree — each with different rules. Java left it to developers to build their own using OOP.
 
-> 💡 **Real World Connection:** When you use `TreeMap` or `TreeSet` in Java, a Red-Black Tree (a self-balancing Binary Tree) is working behind the scenes. You get the benefits of a tree — sorted data, O(log n) performance — without building it yourself.
+> 💡 **Real World Connection:** When you use `TreeMap` or `TreeSet`, a **Red-Black Tree** (a self-balancing Binary Tree) is working behind the scenes — giving you sorted data at O(log n) performance without building it yourself.
 
 ---
 
 ### Key Takeaways
-- A Binary Tree is a hierarchical structure where each node has at most two children — left and right.
-- Binary Trees are the foundation of Binary Search Trees, Heaps, and Expression Trees.
+- A Binary Tree allows each node to have **at most two children** — left and right.
 - Java has no built-in Binary Tree — developers implement their own using OOP when needed.
 - TreeMap and TreeSet are powered by Binary Trees internally.
 
 ---
 
-## Part 4: Algorithms — Searching
+## Part 4: Binary Search Tree (BST)
 
-An **algorithm** is a step-by-step procedure to solve a problem. In the context of data structures, algorithms are used to perform operations such as searching, sorting, and traversing data efficiently.
+A **Binary Search Tree** is a Binary Tree with one additional rule that makes it extremely powerful for searching:
+
+> **Left child < Parent < Right child**
+
+Every node's left subtree contains only values **smaller** than the node. Every node's right subtree contains only values **greater** than the node. This ordering means you can search a BST very efficiently — at each node you eliminate half the remaining tree.
 
 ---
 
-### What Is Searching?
+### Visual Example
 
-Searching is the process of checking whether a particular element exists in a collection and, if it does, determining its position or index.
+```mermaid
+graph TD
+    N10["10 (Root)"]
+    N5["5"]
+    N15["15"]
+    N2["2 ✦ Leaf"]
+    N7["7 ✦ Leaf"]
+    N12["12 ✦ Leaf"]
+    N20["20 ✦ Leaf"]
+
+    N10 -->|"< 10 go left"| N5
+    N10 -->|"> 10 go right"| N15
+    N5 -->|"< 5 go left"| N2
+    N5 -->|"> 5 go right"| N7
+    N15 -->|"< 15 go left"| N12
+    N15 -->|"> 15 go right"| N20
+
+    style N10 fill:#bbdefb
+    style N5 fill:#e3f2fd
+    style N15 fill:#e3f2fd
+    style N2 fill:#e8f5e9
+    style N7 fill:#e8f5e9
+    style N12 fill:#e8f5e9
+    style N20 fill:#e8f5e9
+```
+
+**Searching for value 7:**
+1. Start at root 10 → 7 < 10 → go left
+2. At node 5 → 7 > 5 → go right
+3. At node 7 → found! ✅
+
+Only 3 steps to find 7 in a tree of 7 nodes. Each step eliminates half the remaining nodes — this is **O(log n)**.
+
+---
+
+### BST vs Plain Binary Tree
+
+| | Binary Tree | Binary Search Tree |
+|--|-------------|-------------------|
+| Children rule | At most 2 children | At most 2 children |
+| Value rule | No rule on values | Left < Parent < Right |
+| Search efficiency | O(n) — no order to exploit | O(log n) — halves at each step |
+| Use case | General hierarchical data | Fast searching and sorting |
+
+---
+
+### Connection to Java Collections
+
+This is exactly why **TreeMap** and **TreeSet** are powerful:
+
+```java
+TreeMap<String, Integer> scores = new TreeMap<>();
+scores.put("Charlie", 78);
+scores.put("Alice", 85);
+scores.put("Bob", 92);
+
+System.out.println(scores); // {Alice=85, Bob=92, Charlie=78}
+// Automatically sorted — BST is maintaining order internally
+// Every lookup is O(log n) — BST eliminates half the tree each step
+```
+
+> 💡 **Key Insight:** When you call `TreeMap.get("Bob")`, Java is traversing a BST internally — going left or right at each node until it finds "Bob". You get O(log n) performance for free.
+
+---
+
+### Key Takeaways
+- A **BST** is a Binary Tree where left < parent < right at every node.
+- Searching a BST is **O(log n)** — each step eliminates half the remaining nodes.
+- **TreeMap** and **TreeSet** use a BST-based structure (Red-Black Tree) internally.
+- BST is the bridge between the tree concept and the sorted collections you already know.
+
+---
+
+## Part 5: Algorithms — Searching
+
+An **algorithm** is a step-by-step procedure to solve a problem. In this section we focus on **searching algorithms** — how do you find a specific element in a collection efficiently.
+
+We will cover two searching algorithms and compare their performance directly.
 
 ---
 
 ### Linear Search
 
-A **Linear Search** checks each element in a list one by one until the desired element is found or the list ends. It is the simplest searching algorithm and works on both sorted and unsorted data.
+A **Linear Search** checks each element one by one until the target is found or the list ends. It works on any dataset — sorted or unsorted.
 
-- **Best case:** Element found at the first position — O(1)
-- **Worst case:** Element not found or at the last position — O(n)
-- **Use case:** Works on any dataset, sorted or unsorted
+- **Best case:** Element at first position — O(1)
+- **Worst case:** Element not found or at last position — O(n)
+- **Requirement:** None — works on any data
 
 ```java
 public class LinearSearchDemo {
@@ -282,33 +372,131 @@ public class LinearSearchDemo {
 Element found at index: 2
 ```
 
+```mermaid
+graph LR
+    A["[4]"] -->|"4 == 15? No"| B["[8]"]
+    B -->|"8 == 15? No"| C["[15]"]
+    C -->|"15 == 15? ✅ Found!"| D["Index 2"]
+
+    style A fill:#ffcdd2
+    style B fill:#ffcdd2
+    style C fill:#c8e6c9
+    style D fill:#c8e6c9
+```
+
 ---
 
-### 👨‍💻 Activity: Implement Linear Search **(5 minutes)**
+### Binary Search
 
-- Create a new file `SearchDemo.java`
-- Declare an array of 8 integers: `{2, 5, 8, 12, 16, 23, 38, 45}`
-- Use **Linear Search** to find the number `16` — print the index when found
-- Try searching for a number that doesn't exist (e.g., `99`) and print `"Not found"`
+**Binary Search** is a much faster algorithm — but it requires the data to be **sorted first**. Instead of checking every element, it repeatedly divides the search space in half.
+
+- **Best case:** Element at middle position — O(1)
+- **Worst case:** O(log n) — far fewer steps than Linear Search
+- **Requirement:** Array **must be sorted**
+
+**How it works:**
+1. Find the middle element
+2. If target equals middle → found
+3. If target is less than middle → search left half
+4. If target is greater than middle → search right half
+5. Repeat until found or search space is empty
+
+```java
+public class BinarySearchDemo {
+  public static void main(String[] args) {
+    int[] numbers = {2, 5, 8, 12, 16, 23, 38, 45}; // must be sorted
+    int target = 16;
+
+    int left = 0;
+    int right = numbers.length - 1;
+    boolean found = false;
+
+    while (left <= right) {
+      int middle = (left + right) / 2;
+
+      if (numbers[middle] == target) {
+        System.out.println("Element found at index: " + middle);
+        found = true;
+        break;
+      } else if (numbers[middle] < target) {
+        left = middle + 1;  // search right half
+      } else {
+        right = middle - 1; // search left half
+      }
+    }
+
+    if (!found) {
+      System.out.println("Element not found.");
+    }
+  }
+}
+```
+
+**Output:**
+```
+Element found at index: 4
+```
+
+```mermaid
+graph TD
+    Start["Array: [2, 5, 8, 12, 16, 23, 38, 45]<br/>Target: 16"]
+    Step1["Middle = index 3 → value 12<br/>16 > 12 → search RIGHT half"]
+    Step2["New range: [16, 23, 38, 45]<br/>Middle = index 5 → value 23<br/>16 < 23 → search LEFT half"]
+    Step3["New range: [16]<br/>Middle = index 4 → value 16<br/>16 == 16 ✅ Found at index 4!"]
+
+    Start --> Step1
+    Step1 --> Step2
+    Step2 --> Step3
+
+    style Start fill:#e3f2fd
+    style Step1 fill:#fff9c4
+    style Step2 fill:#fff9c4
+    style Step3 fill:#c8e6c9
+```
+
+---
+
+### Linear Search vs Binary Search — The Big O Moment
+
+| | Linear Search | Binary Search |
+|--|--------------|--------------|
+| Time Complexity | O(n) | O(log n) |
+| Requires sorted data | No | Yes |
+| 100 elements | Up to 100 steps | Up to 7 steps |
+| 1 million elements | Up to 1,000,000 steps | Up to 20 steps |
+| 1 billion elements | Up to 1,000,000,000 steps | Up to 30 steps |
+
+> 💡 **The Power of O(log n):** Searching 1 billion records takes Binary Search only **30 steps**. This is why sorting your data first — even though sorting has a cost — pays off enormously when you need to search repeatedly.
+
+---
+
+### 👨‍💻 Activity: Implement Both Search Algorithms **(10 minutes)**
+
+- Declare a sorted array: `{3, 7, 11, 19,24, 35, 48, 56, 72, 90}`
+- Implement **Linear Search** to find `35` — print index and number of steps taken
+- Implement **Binary Search** to find `35` — print index and number of steps taken
+- Compare the number of steps between both approaches
+- Try searching for `100` (not in array) with both — what happens?
 
 ---
 
 ### Key Takeaways
-- **Linear Search** checks each element one by one — O(n) worst case.
-- Simple to implement and works on any dataset.
-- For fast lookups use **HashMap** — O(1). Linear Search is for when you don't have a key.
+- **Linear Search** — simple, works on any data, O(n).
+- **Binary Search** — fast, requires sorted data, O(log n).
+- The difference becomes dramatic at scale — 1 billion records, 30 steps vs 1 billion steps.
+- Always ask: is my data sorted? If yes, Binary Search. If no, sort first or use Linear Search.
 
 ---
 
-## Part 5: Algorithms — Sorting
+## Part 6: Algorithms — Sorting
 
-Sorting is the process of arranging data in a particular order — typically ascending or descending. Efficient sorting improves the performance of other operations such as searching and data retrieval.
+Sorting is the process of arranging data in a particular order — typically ascending or descending. Efficient sorting improves the performance of other operations, especially searching.
 
 ---
 
 ### Bubble Sort
 
-Bubble Sort is the simplest sorting algorithm. It repeatedly compares adjacent elements and swaps them if they are in the wrong order. After each pass, the largest element "bubbles up" to the end of the list.
+Bubble Sort is the simplest sorting algorithm. It repeatedly compares adjacent elements and swaps them if they are in the wrong order. After each pass, the largest unsorted element "bubbles up" to its correct position.
 
 - **Time Complexity:** O(n²) — nested loops
 - **Best Case:** List is already sorted
@@ -324,6 +512,7 @@ public class BubbleSortDemo {
     for (int i = 0; i < n - 1; i++) {
       for (int j = 0; j < n - i - 1; j++) {
         if (numbers[j] > numbers[j + 1]) {
+          // swap
           int temp = numbers[j];
           numbers[j] = numbers[j + 1];
           numbers[j + 1] = temp;
@@ -346,11 +535,11 @@ Sorted array: 2 3 4 5 8
 
 ```mermaid
 graph TD
-    Start["Initial Array:<br/>[5, 3, 8, 4, 2]"]
-    Pass1["Pass 1:<br/>[3, 5, 4, 2, 8]<br/>Largest (8) bubbles right"]
-    Pass2["Pass 2:<br/>[3, 4, 2, 5, 8]<br/>Next largest moves right"]
-    Pass3["Pass 3:<br/>[3, 2, 4, 5, 8]<br/>Continue sorting"]
-    Pass4["Pass 4:<br/>[2, 3, 4, 5, 8]<br/>Fully sorted"]
+    Start["Initial Array: [5, 3, 8, 4, 2]"]
+    Pass1["Pass 1: [3, 5, 4, 2, 8]<br/>Largest (8) bubbles to end"]
+    Pass2["Pass 2: [3, 4, 2, 5, 8]<br/>Next largest (5) in position"]
+    Pass3["Pass 3: [3, 2, 4, 5, 8]<br/>Continue sorting"]
+    Pass4["Pass 4: [2, 3, 4, 5, 8]<br/>✅ Fully sorted"]
 
     Start --> Pass1
     Pass1 --> Pass2
@@ -358,7 +547,8 @@ graph TD
     Pass3 --> Pass4
 
     style Start fill:#ffcdd2
-    style Pass1 fill:#e3f2fd
+    style Pass1 fill:#fff9c4
+    style Pass2 --> Pass3
     style Pass2 fill:#e3f2fd
     style Pass3 fill:#e3f2fd
     style Pass4 fill:#c8e6c9
@@ -368,8 +558,6 @@ graph TD
 
 ### Other Sorting Algorithms (Awareness Only — No Coding Required)
 
-These algorithms are faster for large datasets. You don't need to implement them today but it's important to know they exist.
-
 | Algorithm | Time Complexity | Best For |
 |------------|-----------------|----------|
 | **Bubble Sort** | O(n²) | Learning and small data |
@@ -378,7 +566,7 @@ These algorithms are faster for large datasets. You don't need to implement them
 | **Merge Sort** | O(n log n) | Large datasets |
 | **Quick Sort** | O(n log n) average | General-purpose fast sorting |
 
-> 💡 **Real World Note:** In production Java code, you would never write your own sort. You'd use `Collections.sort()` or `Arrays.sort()` which use highly optimised versions of these algorithms internally. Understanding Bubble Sort teaches you *why* sorting is expensive — so you appreciate what Java is doing for you.
+> 💡 **Real World Note:** In production Java code you would never write your own sort. You would use `Collections.sort()` or `Arrays.sort()` which use highly optimised algorithms internally. Understanding Bubble Sort teaches you *why* sorting is expensive — so you appreciate what Java is doing for you automatically.
 
 ---
 
@@ -388,6 +576,7 @@ These algorithms are faster for large datasets. You don't need to implement them
 - Declare this array: `{45, 12, 89, 33, 67}`
 - Sort it using **Bubble Sort** and print the result
 - Expected output: `12 33 45 67 89`
+- **Bonus:** After sorting, run your Binary Search from Part 5 on the sorted result to find `45`
 
 ---
 
@@ -395,120 +584,7 @@ These algorithms are faster for large datasets. You don't need to implement them
 - **Bubble Sort** repeatedly swaps adjacent elements until sorted — O(n²).
 - Nested loops are the reason for O(n²) — avoid for large datasets.
 - In real projects use `Collections.sort()` or `Arrays.sort()` — built-in and optimised.
-
----
-
-## Part 6: Recursion
-
-**Recursion** is a programming technique where a method calls itself to solve a problem by breaking it into smaller versions of the same problem.
-
----
-
-### The Two Rules of Recursion
-
-Every recursive method must have exactly two things:
-
-| Component | Description |
-|-----------|-------------|
-| **Base Case** | The stopping condition. When reached, the method returns without calling itself again. |
-| **Recursive Case** | The method calls itself with a smaller or simpler input, moving toward the base case. |
-
-> ⚠️ Without a base case the method calls itself forever — causing a **StackOverflowError**.
-
----
-
-### Real World Connection
-
-Think about how your OS calculates the size of a folder:
-- Open folder → check all files → for each subfolder, open it and do the same thing
-- Each subfolder triggers the same operation on a smaller problem
-- Stops when there are no more subfolders — that's the base case
-
-This is recursion. The same operation applied repeatedly on smaller inputs until a stopping condition is met.
-
----
-
-### Example: Fibonacci Sequence
-
-The Fibonacci sequence is a classic example where recursion maps naturally to the problem definition:
-
-```
-0, 1, 1, 2, 3, 5, 8, 13, 21, 34...
-Each number = sum of the two before it
-```
-
-**Recursive Definition:**
-- `fibonacci(0)` = 0 (base case)
-- `fibonacci(1)` = 1 (base case)
-- `fibonacci(n)` = `fibonacci(n-1)` + `fibonacci(n-2)` (recursive case)
-
-```java
-public class FibonacciDemo {
-
-  public static int fibonacci(int n) {
-    // Base cases
-    if (n == 0) return 0;
-    if (n == 1) return 1;
-
-    // Recursive case — each call breaks into two smaller calls
-    return fibonacci(n - 1) + fibonacci(n - 2);
-  }
-
-  public static void main(String[] args) {
-    System.out.println("Fibonacci sequence:");
-    for (int i = 0; i <= 10; i++) {
-      System.out.print(fibonacci(i) + " ");
-    }
-    // Output: 0 1 1 2 3 5 8 13 21 34 55
-  }
-}
-```
-
-**How It Works for fibonacci(5):**
-```
-fibonacci(5)
-  = fibonacci(4) + fibonacci(3)
-  = (fibonacci(3) + fibonacci(2)) + (fibonacci(2) + fibonacci(1))
-  = ... keeps breaking down until it hits base cases 0 and 1
-  = 5
-```
-
----
-
-### The Big O Conversation
-
-This is where it gets interesting for experienced developers:
-
-```
-fibonacci(5)  →  calls itself ~15 times
-fibonacci(10) →  calls itself ~177 times
-fibonacci(50) →  calls itself ~2 trillion times  ← danger zone
-```
-
-Naive recursive Fibonacci is **O(2^n)** — exponential. It recalculates the same values over and over. This is why in production code you would use **memoization** (caching results) or an iterative approach instead.
-
-> 💡 **Key Insight:** Recursion is elegant and readable. But always ask — what is the time complexity? Fibonacci looks simple but scales terribly without optimisation. This is exactly the kind of trade-off a modern engineer needs to recognise.
-
----
-
-### 👨‍💻 Activity: Practice Recursion **(5 minutes)**
-
-Write a recursive method `sumDigits(int n)` that calculates the sum of all digits in a number.
-
-- `sumDigits(123)` → `1 + 2 + 3` = `6`
-- `sumDigits(9045)` → `9 + 0 + 4 + 5` = `18`
-
-**Hints:**
-- Base case: if `n < 10` return `n`
-- Recursive case: last digit is `n % 10`, remaining number is `n / 10`
-
----
-
-### Key Takeaways
-- Recursion is a method calling itself with a smaller input until a base case is reached.
-- Always define a base case — without it you get a **StackOverflowError**.
-- Recursion is elegant for hierarchical problems but watch the time complexity.
-- Naive recursive solutions can be exponentially slow — always consider the trade-off.
+- Sorting enables Binary Search — the two algorithms work together.
 
 ---
 
@@ -516,11 +592,12 @@ Write a recursive method `sumDigits(int n)` that calculates the sum of all digit
 
 | Concept | What It Is | Key Point |
 |---------|-----------|-----------|
-| Trees | Hierarchical non-linear structure | No built-in Java class — build with OOP |
-| Binary Trees | Tree where each node has at most 2 children | Foundation of TreeMap and TreeSet internally |
-| Linear Search | Check elements one by one | O(n) — simple but slow for large data |
+| Trees | Hierarchical non-linear structure | No built-in Java class |
+| Binary Trees | Tree where each node has at most 2 children | Foundation of BST, Heaps |
+| Binary Search Tree | Binary Tree where left < parent < right | O(log n) search — powers TreeMap/TreeSet |
+| Linear Search | Check elements one by one | O(n) — works on any data |
+| Binary Search | Halve search space each step | O(log n) — requires sorted data |
 | Bubble Sort | Swap adjacent elements repeatedly | O(n²) — use Collections.sort() in production |
-| Recursion | Method calls itself | Always need a base case — watch time complexity |
 
 ---
 
@@ -528,23 +605,25 @@ Write a recursive method `sumDigits(int n)` that calculates the sum of all digit
 
 | Operation | Best Data Structure | Algorithm / Method | Time Complexity |
 |-----------|--------------------|--------------------|-----------------|
-| Search by value | Array / ArrayList | Linear Search | O(n) |
-| Search by key | HashMap | Direct lookup `.get()` | O(1) |
-| Sorted lookup | TreeMap | Internal tree traversal | O(log n) |
+| Search unsorted data | Array / ArrayList | Linear Search | O(n) |
+| Search sorted data | Sorted Array | Binary Search | O(log n) |
+| Search by key | HashMap | Direct `.get()` | O(1) |
+| Sorted key lookup | TreeMap | BST traversal internally | O(log n) |
 | Sort elements | Array | Bubble Sort / Arrays.sort() | O(n²) / O(n log n) |
 | Hierarchical data | Build with OOP | Tree / Binary Tree | Varies |
 
 ---
 
-## Selection Sort(Optional):
+## 🔵 Optional: Selection Sort
 
 > For students who finish early or want to explore further.
 
-**Selection Sort** improves on Bubble Sort by reducing the number of swaps. Instead of comparing adjacent pairs repeatedly, it scans for the smallest element in the unsorted portion and moves it to the front in a single swap per pass.
+### Selection Sort
 
-- **Concept:** Select the smallest element and move it to its correct position.
-- **Time Complexity:** O(n²) — still uses nested loops.
-- **Use Case:** When minimising data movement (swaps) is important.
+**Selection Sort** improves on Bubble Sort by reducing the number of swaps. It scans for the smallest element in the unsorted portion and moves it to the front in a single swap per pass.
+
+- **Time Complexity:** O(n²)
+- **Use Case:** When minimising data movement (swaps) is important
 
 ```java
 public class SelectionSortDemo {
@@ -559,7 +638,6 @@ public class SelectionSortDemo {
           minIndex = j;
         }
       }
-
       int temp = numbers[minIndex];
       numbers[minIndex] = numbers[i];
       numbers[i] = temp;
@@ -578,8 +656,5 @@ public class SelectionSortDemo {
 Sorted array: 11 12 22 25 64
 ```
 
-Try running this on the same array from the Bubble Sort activity — `{45, 12, 89, 33, 67}` — and confirm both algorithms produce the same sorted result.
-
 ---
-
 **End of Lesson 3.5**
