@@ -548,7 +548,6 @@ graph TD
 
     style Start fill:#ffcdd2
     style Pass1 fill:#fff9c4
-    style Pass2 --> Pass3
     style Pass2 fill:#e3f2fd
     style Pass3 fill:#e3f2fd
     style Pass4 fill:#c8e6c9
@@ -655,6 +654,5 @@ public class SelectionSortDemo {
 ```
 Sorted array: 11 12 22 25 64
 ```
-
----
+>
 **End of Lesson 3.5**
