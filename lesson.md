@@ -617,7 +617,7 @@ graph TD
 
 > For students who finish early or want to explore further.
 
-### Selection Sort
+### Selection Sort:
 
 **Selection Sort** improves on Bubble Sort by reducing the number of swaps. It scans for the smallest element in the unsorted portion and moves it to the front in a single swap per pass.
 
