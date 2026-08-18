@@ -1,57 +1,85 @@
-# Lesson 3.5: Data Structures and Algorithms (Part 2)
+# Lesson 3.5: Searching, Sorting and Non-Linear Data Structures
 
 ## Lesson Overview
-This lesson continues from Lesson 3.4. Having learned how to **store** data, we now look at how to **process** it — how to search through it, how to sort it, and how to represent data that does not fit into a simple list. Students will implement Linear Search, Binary Search, and Bubble Sort, then explore **non-linear data structures** — Trees, Binary Trees, and Binary Search Trees — and discover how these underpin the sorted collections they already used in Lesson 3.4.
+
+In Lesson 3.4 you learned how to **store** data. This lesson is about what you do with it — how to find it, how to order it, and how to represent data that a flat list cannot express.
+
+The focus throughout is on **judgement, not implementation**. You will read the classic algorithms rather than grind through writing them, because the real skill in this job is knowing which structure to reach for and roughly what it costs. By the end you will understand what Java is actually doing when you call `Collections.sort()`, why `TreeMap` is always sorted, and why the same idea that powers a Binary Search Tree also powers the vector databases behind modern RAG systems.
 
 **Module:** 3.5
-**Duration:** 3 hours
-**Prerequisites:** Completion of Lesson 3.4 (Data Structures and Algorithms Part 1)
+**Duration:** 2 hours
+**Prerequisites:** Lesson 3.4 (Data Structures and Algorithms Part 1)
 
 ---
 
 ## Lesson Objectives
+
 By the end of this lesson, students will be able to:
-- Implement Linear Search to locate elements in an array.
-- Implement Binary Search and explain why it requires sorted data.
-- Compare the two search approaches and choose appropriately.
-- Implement Bubble Sort and explain why sorting is expensive.
-- Describe what Java's built-in sorting methods actually use.
-- Describe the structure of Trees, Binary Trees, and Binary Search Trees.
-- Explain how a Binary Search Tree powers TreeMap and TreeSet.
+
+- Use Big-O notation as vocabulary to describe and compare the cost of an operation.
+- Explain Linear Search and Binary Search, and choose correctly between them.
+- Explain why sorting is expensive, and why you should never hand-write a sort.
+- Describe the two algorithms Java actually uses to sort, and why it needs two.
+- Describe Trees, Binary Trees, and Binary Search Trees, and how a BST powers `TreeMap` and `TreeSet`.
+- Explain why an unbalanced tree destroys performance, and how Java prevents it.
+- Connect the "discard half the search space" idea to vector search in AI systems.
 
 ---
 
-## Connecting Back to Lesson 3.4
+## Running Order
 
-In Lesson 3.4 we covered how to **store and organise data**. In this lesson we focus on **what you do with it** — finding it, sorting it, and representing relationships that a flat list cannot express.
+| # | Segment | Time |
+|---|---------|------|
+| 1 | Big-O as vocabulary | 5 min |
+| 2 | Linear Search | 5 min |
+| 3 | Binary Search | 10 min |
+| 4 | Counting the steps | 10 min |
+| 5 | Bubble Sort, and what we are deliberately not teaching | 10 min |
+| 6 | What Java actually uses | 15 min |
+| 7 | Trees and Binary Trees | 12 min |
+| 8 | Binary Search Trees, TreeMap and TreeSet | 20 min |
+| 9 | The BST hiding inside HashMap | 5 min |
+| 10 | Activity: the tree that goes wrong | 10 min |
+| 11 | Where this shows up in AI engineering | 10 min |
+| 12 | Summary and wrap | 8 min |
 
-| From 3.4 | What We Do With It in 3.5 |
-|----------|--------------------------|
-| Array | Linear Search, Binary Search, Bubble Sort |
-| ArrayList | Linear Search, `Collections.sort()` revisited |
-| ArrayDeque | Used internally by many tree and graph algorithms |
-| HashMap / HashSet | Already fast lookup by key — no search algorithm needed |
-| TreeMap / TreeSet | Built on a Binary Search Tree — explained fully in this lesson |
-| `Comparator` | The rule that decides sort order |
-| `record` | Still your default for objects held in Sets and Maps |
-
-> **Note:** In Lesson 3.4 you called `Collections.sort()` and it just worked. In this lesson you will see what is happening underneath, and why Java's version is far better than anything you would write by hand.
-
----
-
-## Part 1: Searching
-
-An **algorithm** is a step-by-step procedure for solving a problem. We start with the most common problem of all — finding something.
+Total: 110 minutes, leaving buffer for questions.
 
 ---
 
-### Linear Search
+## Segment 1: Big-O as Vocabulary
 
-A **Linear Search** checks each element one by one until it finds the target or runs out of elements.
+Before anything else, four pieces of vocabulary. You will hear these in every technical interview you ever sit, so learn them as language, not as mathematics.
 
-- Works on **any** data, sorted or not
-- Best case: the element is first — one check
-- Worst case: the element is last or missing — every element is checked
+**Big-O notation describes how the work grows as the data grows.** That is all it is. It ignores constants and hardware and asks one question: if I give this ten times more data, what happens?
+
+| Notation | Name | What it means in practice | Example |
+|----------|------|---------------------------|---------|
+| **O(1)** | Constant | The size of the data does not matter at all | `HashMap.get()` |
+| **O(log n)** | Logarithmic | Each step discards half the remaining data | Binary Search, `TreeMap.get()` |
+| **O(n)** | Linear | You touch every element once | Linear Search, a single `for` loop |
+| **O(n²)** | Quadratic | A loop inside a loop | Bubble Sort |
+
+The practical reading:
+
+- **O(1)** and **O(log n)** scale to essentially any dataset. Do not worry about them.
+- **O(n)** is usually fine, and is often unavoidable.
+- **O(n²)** is where systems die. Ten times the data means a hundred times the work.
+
+> **Instructor note:** Do not derive anything. Read the table, give the ten-times-the-data reading of each row, and move on. This slide exists so that when they hear "that's O(n squared)" later in the lesson, the phrase already means something.
+
+---
+
+## Segment 2: Linear Search
+
+An **algorithm** is a step-by-step procedure for solving a problem. We start with the most common problem of all: finding something.
+
+A **Linear Search** checks each element in turn until it finds the target or runs out of elements.
+
+- Works on **any** data, sorted or not.
+- Best case: the element is first — one check.
+- Worst case: the element is last or missing — every element is checked.
+- Cost: **O(n)**.
 
 ```java
 public class LinearSearchDemo {
@@ -80,34 +108,22 @@ public class LinearSearchDemo {
 Element found at index: 2
 ```
 
-```mermaid
-graph LR
-    A["[4]"] -->|"4 == 15? No"| B["[8]"]
-    B -->|"8 == 15? No"| C["[15]"]
-    C -->|"15 == 15? Found"| D["Index 2"]
-
-    style A fill:#ffcdd2
-    style B fill:#ffcdd2
-    style C fill:#c8e6c9
-    style D fill:#c8e6c9
-```
-
-The `break` matters here. Without it, the loop keeps running after the element is found, doing work for no reason.
+The `break` matters. Without it the loop keeps running after the element is found, doing work for no reason. That is the single most common beginner bug in this pattern.
 
 ---
 
-### Binary Search
+## Segment 3: Binary Search
 
-**Binary Search** is far faster, but it comes with one strict condition: **the data must already be sorted.**
+**Binary Search** is dramatically faster, but it comes with one strict condition: **the data must already be sorted.**
 
-Instead of checking every element, it looks at the middle, then throws away half the remaining data — and repeats.
+Instead of checking every element, it looks at the middle and throws away half the remaining data — then repeats.
 
 **How it works:**
-1. Look at the middle element
-2. If it matches the target, you are done
-3. If the target is smaller, search the left half
-4. If the target is larger, search the right half
-5. Repeat until found, or nothing is left to search
+1. Look at the middle element.
+2. If it matches the target, you are done.
+3. If the target is smaller, search the left half.
+4. If the target is larger, search the right half.
+5. Repeat until found, or until nothing is left.
 
 ```java
 public class BinarySearchDemo {
@@ -162,49 +178,40 @@ graph TD
     style Step3 fill:#c8e6c9
 ```
 
+> **Important:** Binary Search on unsorted data does not throw an error. It silently returns the wrong answer. Always confirm your data is sorted first.
+
+In practice you would call `Arrays.binarySearch(numbers, target)` rather than write this. We are reading it so that the *idea* — halve the problem at every step — is in your head, because it comes back three more times in this lesson.
+
+> **Instructor note:** Trace the diagram out loud, one step at a time, saying "and now half the data is gone" at each arrow. That phrase is the spine of the whole lesson. Repeat it deliberately.
+
 ---
 
-### Why Binary Search Wins
+## Segment 4: Counting the Steps
 
-Forget the theory for a moment and just count the steps.
+Forget the theory. Just count.
 
 | Number of records | Linear Search, worst case | Binary Search, worst case |
 |-------------------|--------------------------|--------------------------|
 | 100 | up to 100 checks | 7 checks |
 | 1,000 | up to 1,000 checks | 10 checks |
 | 1,000,000 | up to 1,000,000 checks | 20 checks |
-| 1,000,000,000 | up to 1,000,000,000 checks | 30 checks |
+| 1,000,000,000 | up to 1,000,000,000 checks | **30 checks** |
 
-Every single check in Binary Search removes half of what is left. That is why the numbers stay so small. A billion records takes 30 checks.
+A billion records. Thirty checks.
 
-This is the payoff for keeping data sorted. Sorting has a cost, but if you search that data repeatedly, you get it back many times over.
+Every check removes half of what remains, so going from a million records to a billion records — a thousand times more data — costs you ten extra steps. That is what **O(log n)** means, and it is the reason the notation is worth knowing.
 
-> **Important:** Binary Search on unsorted data does not throw an error. It simply returns the wrong answer, silently. Always confirm your data is sorted first.
+This is the payoff for keeping data sorted. Sorting has a cost, which we will look at next, but if you search that data repeatedly you earn it back many times over.
 
----
-
-### 👨‍💻 Activity 1: Compare Both Search Approaches **(15 minutes)**
-
-Use this sorted array: `{3, 7, 11, 19, 24, 35, 48, 56, 72, 90}`
-
-1. Implement **Linear Search** to find `35`. Print the index and count how many checks it took.
-2. Implement **Binary Search** to find `35`. Print the index and count how many checks it took.
-3. Compare the two counts.
-4. Now search for `100`, which is not in the array, using both. What does each one do?
-
-**Hint:** add a counter variable that increments once per loop iteration.
+> **Instructor note:** This is the strongest moment in the lesson. Do not rush it. Put the table up, stay quiet for a beat, then ask the room: "How many checks do you think a billion records takes?" Let them guess high. The reveal does the teaching for you.
 
 ---
 
-## Part 2: Sorting
+## Segment 5: Bubble Sort, and What We Are Deliberately Not Teaching
 
-Sorting arranges data into order. It matters because so many other operations — Binary Search included — depend on ordered data.
+Sorting arranges data into order. It matters because so many other operations — Binary Search included — depend on it.
 
----
-
-### Bubble Sort
-
-Bubble Sort is the simplest sorting algorithm to understand. It compares each pair of neighbouring elements and swaps them if they are the wrong way round. After each full pass, the largest remaining value has moved to its correct position at the end.
+**Bubble Sort** is the simplest sorting algorithm to understand. It compares each pair of neighbouring elements and swaps them if they are the wrong way round. After each full pass, the largest remaining value has moved into place at the end.
 
 ```java
 public class BubbleSortDemo {
@@ -235,29 +242,7 @@ public class BubbleSortDemo {
 Sorted array: 2 3 4 5 8
 ```
 
-```mermaid
-graph TD
-    Start["Initial: [5, 3, 8, 4, 2]"]
-    Pass1["Pass 1: [3, 5, 4, 2, 8]<br/>Largest value 8 has moved to the end"]
-    Pass2["Pass 2: [3, 4, 2, 5, 8]<br/>Next largest 5 is in place"]
-    Pass3["Pass 3: [3, 2, 4, 5, 8]<br/>4 is in place"]
-    Pass4["Pass 4: [2, 3, 4, 5, 8]<br/>Fully sorted"]
-
-    Start --> Pass1
-    Pass1 --> Pass2
-    Pass2 --> Pass3
-    Pass3 --> Pass4
-
-    style Start fill:#ffcdd2
-    style Pass1 fill:#fff9c4
-    style Pass2 fill:#e3f2fd
-    style Pass3 fill:#e3f2fd
-    style Pass4 fill:#c8e6c9
-```
-
-### Why Sorting Is Expensive
-
-Notice the **nested loop** — a loop inside a loop. That is what makes sorting costly. Count the comparisons:
+Look at the shape of the code, not the detail. A **loop inside a loop**. That is O(n²), and here is what it costs:
 
 | Number of items | Roughly how many comparisons |
 |-----------------|------------------------------|
@@ -265,21 +250,19 @@ Notice the **nested loop** — a loop inside a loop. That is what makes sorting 
 | 100 | about 10,000 |
 | 1,000 | about 1,000,000 |
 
-The work grows much faster than the data does. Doubling your data roughly quadruples the work. This is why nobody uses Bubble Sort on real datasets — and why understanding it helps you appreciate what Java gives you instead.
+Double the data, quadruple the work. This is why nobody sorts real data this way.
+
+### What we are deliberately not covering
+
+> A traditional data structures course would have you implement merge sort, quicksort, insertion sort, linked lists, stacks and AVL trees from scratch. We are deliberately not doing that.
+>
+> Those exercises exist to train you for a world where you write these yourself, and you will not. Java's implementations are the product of decades of tuning by specialists, and hand-rolling your own is a code review failure, not a flex. What matters is that you can look at a problem, know which structure to reach for, and know roughly what it costs. That judgement is the skill. The implementation is a solved problem.
+>
+> If you want the practice for interview preparation, the optional exercises are posted separately. They are genuinely useful for that purpose and genuinely useless for production work. Know which one you are doing.
 
 ---
 
-### 👨‍💻 Activity 2: Implement Bubble Sort **(10 minutes)**
-
-1. Create a file `SortDemo.java`
-2. Declare this array: `{45, 12, 89, 33, 67}`
-3. Sort it using Bubble Sort and print the result
-4. Expected output: `12 33 45 67 89`
-5. **Bonus:** run your Binary Search from Activity 1 on the sorted result to find `45`
-
----
-
-### What Java Actually Uses
+## Segment 6: What Java Actually Uses
 
 In Lesson 3.4 you sorted a list like this:
 
@@ -288,29 +271,42 @@ Collections.sort(products);
 products.sort(Comparator.comparing(Product::price));
 ```
 
-One line, and it worked. So what is running underneath?
+One line, and it worked. So what is running underneath? Not Bubble Sort. Java uses **two** different, heavily optimised algorithms, and which one you get depends on what you are sorting.
 
-Java does not use Bubble Sort. It uses two different, highly optimised algorithms depending on what you are sorting:
+### For primitives — `int[]`, `double[]`, `char[]` — Dual-Pivot Quicksort
 
-**For primitives — `int[]`, `double[]`, `char[]` — Java uses Dual-Pivot Quicksort.**
+Standard Quicksort picks one value as a pivot and splits the data into "smaller than" and "larger than" groups, then repeats on each group. Notice that this is the same instinct as Binary Search: split the problem, then recurse.
 
-Standard Quicksort picks one value as a pivot and splits the data into "smaller than" and "larger than" groups, then repeats on each group. Java's version picks **two** pivots and splits into three groups instead of two. Fewer passes, fewer comparisons, better use of the processor cache. It was contributed to the JDK in 2009 and measurably outperformed the previous implementation.
+Java's version picks **two** pivots and splits into three groups instead of two. Fewer passes, fewer comparisons, better use of the processor cache. It was contributed to the JDK in 2009 and measurably beat the previous implementation.
 
-**For objects — `List<Product>`, `String[]` — Java uses TimSort.**
+### For objects — `List<Product>`, `String[]` — TimSort
 
-TimSort is built on a practical observation: real-world data is rarely random. It usually contains stretches that are already in order. TimSort finds those stretches, called runs, and merges them intelligently instead of sorting from scratch.
+TimSort is built on a practical observation: real-world data is rarely random. It usually contains stretches that are already in order — timestamps, IDs, alphabetised names. TimSort finds those stretches, called **runs**, and merges them intelligently instead of sorting from scratch.
 
 On data that is already sorted, TimSort finishes in a single pass. It was designed for Python in 2002 and adopted by Java in Java 7.
 
-**Why two algorithms?**
+### Why two algorithms?
 
-Because they optimise for different things. Sorting objects must be **stable** — if two products have the same price, they must stay in their original relative order after sorting. TimSort guarantees this. Quicksort does not, but for primitives it does not matter: one `5` is indistinguishable from another `5`, so stability is meaningless.
+Because they optimise for different things, and the difference is **stability**.
 
-**The practical takeaway:** always use `Arrays.sort()` or `Collections.sort()`. They are the result of decades of tuning by people who do nothing else. Understanding Bubble Sort tells you *why* sorting costs something — it does not mean you should ever write your own.
+A stable sort preserves the original relative order of equal elements. If two products both cost $20, a stable sort guarantees they come out in the same order they went in. TimSort guarantees this. Quicksort does not.
+
+For objects that matters enormously — it is what lets you sort by price, then sort by category, and still have the price order preserved within each category. For primitives it is meaningless: one `5` is indistinguishable from another `5`, so there is nothing to preserve.
+
+| | Dual-Pivot Quicksort | TimSort |
+|--|---------------------|---------|
+| Used for | Primitives (`int[]`, `double[]`) | Objects (`List<T>`, `String[]`) |
+| Stable? | No | Yes |
+| Best case | Fast on random data | Single pass on sorted data |
+| Called via | `Arrays.sort(int[])` | `Collections.sort()`, `List.sort()` |
+
+**The practical takeaway:** always use `Arrays.sort()` or `Collections.sort()`. Understanding Bubble Sort tells you *why* sorting costs something. It does not mean you should ever write your own.
+
+> **Instructor note:** The stability point is the one that makes people sit up, because it explains a behaviour they can immediately use — chained sorting. If you have time for a live demo, sort a list of records by one field, then by another, and show the first ordering surviving inside the second.
 
 ---
 
-## Part 3: Non-Linear Data Structures
+## Segment 7: Trees and Binary Trees
 
 In Lesson 3.4 we covered two of the three categories of data structure. Here is the full picture:
 
@@ -320,77 +316,18 @@ In Lesson 3.4 we covered two of the three categories of data structure. Here is 
 | **Hash-Based** | HashMap, HashSet and variants | By hash code, no sequence |
 | **Non-Linear** | Tree, Binary Tree | Hierarchically, as parent and child |
 
-In a **non-linear structure**, elements are not arranged in a sequence. They are connected to express relationships — most commonly a parent-and-child hierarchy. This suits data that a flat list cannot represent naturally: an organisation chart, a folder structure, a category hierarchy in an online store.
+In a **non-linear structure** the elements are not in a sequence. They are connected to express relationships — most commonly a parent-and-child hierarchy. This suits data a flat list cannot represent naturally: an organisation chart, a folder structure, a product category hierarchy.
 
-| | Linear Structure | Non-Linear Structure |
-|--|------------------|----------------------|
-| Arrangement | One after another | Hierarchical |
-| Traversal | A single path, start to end | Several possible paths |
-| Examples | Array, ArrayList, LinkedList | Tree, Binary Tree |
-| Suits | Ordered data | Relationships between data |
-
-```mermaid
-graph LR
-    subgraph Linear["Linear Structure"]
-        direction LR
-        L1[Element 1] --> L2[Element 2]
-        L2 --> L3[Element 3]
-        L3 --> L4[Element 4]
-    end
-
-    subgraph NonLinear["Non-Linear Structure"]
-        direction TB
-        NL1[Root]
-        NL2[Child 1]
-        NL3[Child 2]
-        NL4[Grandchild 1]
-        NL5[Grandchild 2]
-
-        NL1 --> NL2
-        NL1 --> NL3
-        NL2 --> NL4
-        NL2 --> NL5
-    end
-
-    style L1 fill:#e3f2fd
-    style L2 fill:#e3f2fd
-    style L3 fill:#e3f2fd
-    style L4 fill:#e3f2fd
-    style NL1 fill:#bbdefb
-    style NL2 fill:#e3f2fd
-    style NL3 fill:#e3f2fd
-    style NL4 fill:#e8f5e9
-    style NL5 fill:#e8f5e9
-```
-
----
-
-## Part 4: Trees
-
-A **Tree** organises data hierarchically. It is made of **nodes** connected by **edges**, where each node may have any number of children.
-
-The everyday comparison is a folder structure. There is one starting point, folders contain other folders, and eventually you reach files with nothing inside them.
-
-### Terms You Need
-
-| Term | Meaning |
-|------|---------|
-| **Root** | The single node at the top |
-| **Parent** | A node with one or more children |
-| **Child** | A node beneath a parent |
-| **Leaf** | A node with no children |
-| **Edge** | The link between two nodes |
-| **Subtree** | Any node together with everything beneath it |
-| **Level** | How far down a node sits, counting the root as level 0 |
+A **Tree** is made of **nodes** connected by **edges**. The node at the top is the **root**, a node with no children is a **leaf**, and any node plus everything beneath it is a **subtree**.
 
 ```mermaid
 graph TD
-    CEO[CEO<br/>Root, Level 0]
-    M1[Manager 1<br/>Level 1]
-    M2[Manager 2<br/>Level 1]
-    D1[Dev 1<br/>Leaf, Level 2]
-    D2[Dev 2<br/>Leaf, Level 2]
-    T1[Tester 1<br/>Leaf, Level 2]
+    CEO["CEO — root"]
+    M1["Manager 1"]
+    M2["Manager 2"]
+    D1["Dev 1 — leaf"]
+    D2["Dev 2 — leaf"]
+    T1["Tester 1 — leaf"]
 
     CEO --> M1
     CEO --> M2
@@ -406,69 +343,45 @@ graph TD
     style T1 fill:#e8f5e9
 ```
 
-### Trees in Java
+### You have been using a tree all module
 
-Unlike ArrayList or HashMap, **Java has no built-in `Tree` class**. There is nothing to import.
+Open any repository you have worked on in this module and run:
 
-This is deliberate. Trees come in many forms — Binary Tree, Binary Search Tree, AVL Tree, Red-Black Tree — each with different rules. Java provides no general Tree because there is no single sensible default.
-
-What Java does provide is **TreeMap** and **TreeSet**, which use a tree internally to keep data sorted. You never see or touch the tree — you just get sorted data.
-
-> If you genuinely need a tree in a project, you build it yourself with classes, where each node object holds references to its children.
-
----
-
-## Part 5: Binary Trees
-
-A **Binary Tree** is a tree with one restriction: each node may have **at most two children**, referred to as the left child and the right child.
-
-That single restriction makes the structure predictable, which makes it far easier to write efficient algorithms against.
-
-```mermaid
-graph TD
-    N10[10<br/>Root]
-    N5[5]
-    N15[15]
-    N2[2<br/>Leaf]
-    N7[7<br/>Leaf]
-    N12[12<br/>Leaf]
-    N20[20<br/>Leaf]
-
-    N10 --> N5
-    N10 --> N15
-    N5 --> N2
-    N5 --> N7
-    N15 --> N12
-    N15 --> N20
-
-    style N10 fill:#bbdefb
-    style N5 fill:#e3f2fd
-    style N15 fill:#e3f2fd
-    style N2 fill:#e8f5e9
-    style N7 fill:#e8f5e9
-    style N12 fill:#e8f5e9
-    style N20 fill:#e8f5e9
+```bash
+git cat-file -p HEAD
 ```
 
-- 10 is the root
-- 5 and 15 are its left and right children
-- 2, 7, 12 and 20 are leaves, with no children
+Git does not store your project as a list of files. Every commit points to a **tree object**, which represents a directory. That tree points to more tree objects for subdirectories, and to **blob objects** for file contents. It is a hierarchy of nodes and edges — a tree in exactly the sense we have just defined.
 
-> **Look closely:** in this example every left value is smaller than its parent and every right value is larger. That is not a rule of Binary Trees in general — it is the rule of a **Binary Search Tree**, which is next.
+And the commits themselves form a second non-linear structure. Each commit points back to its parent, which is why `git log --graph` draws branches and merges rather than a straight line, and why a merge commit is simply a node with two parents.
+
+So when you branched, merged and resolved conflicts in Module 3, you were navigating a non-linear data structure. You just were not calling it that.
+
+### Trees in Java
+
+Unlike `ArrayList` or `HashMap`, **Java has no built-in `Tree` class**. There is nothing to import.
+
+This is deliberate. Trees come in many forms — Binary Tree, Binary Search Tree, AVL Tree, Red-Black Tree — each with different rules, and there is no sensible default. If you genuinely need a tree, you build it yourself with a class whose objects hold references to their children.
+
+What Java does give you is `TreeMap` and `TreeSet`, which use a tree internally to keep data sorted. You never touch the tree; you just get sorted data.
+
+### Binary Trees
+
+A **Binary Tree** adds exactly one restriction: each node may have **at most two children**, called the left child and the right child.
+
+That single restriction makes the structure predictable, and predictable structures are easy to write fast algorithms against. On its own a Binary Tree says nothing about *which* values go left or right. Add one rule about that, and you get something far more powerful.
 
 ---
 
-## Part 6: Binary Search Tree
+## Segment 8: Binary Search Trees, TreeMap and TreeSet
 
-A **Binary Search Tree**, or BST, is a Binary Tree with one extra rule:
+A **Binary Search Tree** (BST) is a Binary Tree with one extra rule, holding at every node:
 
 > **Left child is smaller than the parent. Right child is larger than the parent.**
 
-This holds at every node in the tree. It is a small rule with a large consequence.
-
 ```mermaid
 graph TD
-    N10["10 (Root)"]
+    N10["10 — root"]
     N5["5"]
     N15["15"]
     N2["2"]
@@ -478,10 +391,10 @@ graph TD
 
     N10 -->|"smaller, go left"| N5
     N10 -->|"larger, go right"| N15
-    N5 -->|"smaller"| N2
-    N5 -->|"larger"| N7
-    N15 -->|"smaller"| N12
-    N15 -->|"larger"| N20
+    N5 --> N2
+    N5 --> N7
+    N15 --> N12
+    N15 --> N20
 
     style N10 fill:#bbdefb
     style N5 fill:#e3f2fd
@@ -497,22 +410,18 @@ graph TD
 2. Now at 5. 7 is larger, so go right.
 3. Now at 7. Found it.
 
-Three steps in a tree of seven values. And notice what happened at each step: **half the remaining tree was discarded.**
+Three steps in a tree of seven values — and at every step, **half the remaining tree was discarded.**
 
-That should feel familiar. It is exactly what Binary Search did to a sorted array — except here, the structure itself enforces the ordering, so no sorting step is needed.
-
-### Binary Tree vs Binary Search Tree
+That should feel familiar. It is exactly what Binary Search did to a sorted array, except here the structure itself enforces the ordering, so there is no sorting step at all. Same O(log n), no sort required.
 
 | | Binary Tree | Binary Search Tree |
 |--|-------------|-------------------|
 | Children | At most 2 | At most 2 |
-| Rule on values | None | Left is smaller, right is larger |
-| Searching | Must check every node | Half the tree removed at each step |
-| Used for | General hierarchical data | Fast searching and sorted data |
+| Rule on values | None | Left smaller, right larger |
+| Searching | Must check every node — O(n) | Half discarded each step — O(log n) |
+| Used for | General hierarchical data | Fast search and permanently sorted data |
 
----
-
-### This Is How TreeMap and TreeSet Work
+### This is how TreeMap and TreeSet work
 
 Now the connection back to Lesson 3.4.
 
@@ -526,72 +435,144 @@ System.out.println(scores);
 // {Alice=85, Bob=92, Charlie=78} — sorted, without you doing anything
 ```
 
-When you call `scores.get("Bob")`, Java is walking a Binary Search Tree internally. It compares "Bob" against the value at each node and goes left or right accordingly, discarding half the remaining entries at every step.
+When you call `scores.get("Bob")`, Java walks a Binary Search Tree. It compares "Bob" against the value at each node and goes left or right, discarding half the remaining entries every time.
 
-The same applies to `TreeSet`. And it explains behaviour you already saw in 3.4:
+This explains behaviour you already saw in 3.4:
 
-- **Why TreeMap is always sorted** — the tree structure maintains order as you insert
-- **Why `firstKey()` and `lastKey()` exist** — they are simply the leftmost and rightmost nodes
-- **Why TreeMap is slightly slower than HashMap** — HashMap jumps straight to a location, while TreeMap walks down through several nodes
+- **Why TreeMap is always sorted** — the tree maintains order as you insert. There is no sort step, ever.
+- **Why `firstKey()` and `lastKey()` exist and are fast** — they are simply the leftmost and rightmost nodes.
+- **Why TreeMap is slightly slower than HashMap** — HashMap jumps straight to a location in O(1); TreeMap walks down through several nodes in O(log n). Slower, but you get ordering for free.
 
-> **A detail worth knowing:** Java uses a **Red-Black Tree**, which is a Binary Search Tree that rebalances itself. Without rebalancing, inserting already-sorted data would produce a tree that is effectively a straight line, losing all the benefit. The Red-Black rules prevent that. You never see any of this — you just get reliable performance.
+### Self-balancing: the detail that makes it work
+
+Java does not use a plain BST. It uses a **Red-Black Tree**, which is a BST that rebalances itself as you insert.
+
+Why that matters becomes obvious in the next activity, so hold the question for now. The short version: without rebalancing, certain insertion orders produce a tree with no branching at all, and every performance guarantee collapses. The Red-Black rules prevent that automatically. You never see any of it — you just get reliable O(log n) whatever order your data arrives in.
 
 ---
 
-### 👨‍💻 Activity 3: Build a Binary Search Tree **(10 minutes)**
+## Segment 9: The BST Hiding Inside HashMap
 
-No code for this one — pen and paper, or a whiteboard.
+One more connection, and it ties both lessons together.
 
-Insert these values into an empty Binary Search Tree, **in this order**:
+`HashMap` works by turning a key into a hash code and using that to jump straight to a bucket. Usually one bucket holds one entry, which is why lookup is O(1).
+
+But hash codes can collide. Two different keys can land in the same bucket, and then Java has to store several entries there. Historically it stored them in a linked list, which meant that in the worst case — many keys colliding, sometimes deliberately, as in a hash collision denial-of-service attack — lookup degraded from O(1) all the way to O(n).
+
+Since **Java 8**, when a single bucket exceeds eight entries, Java converts that bucket from a linked list into a **Red-Black Tree**. The worst case improves from O(n) to O(log n).
+
+So the `HashMap` you have been using since Lesson 3.4 contains, in its worst moments, exactly the structure we just spent twenty minutes on.
+
+> **Instructor note:** This is a five-minute segment and the payoff is the last sentence. Deliver it as the loop closing: hashing, trees, balancing and Big-O all turn out to be one story rather than four topics. If anyone asks about the threshold: eight entries to convert to a tree, six to convert back, and it only applies when the map has at least 64 buckets. You will not be asked, but it is there if you are.
+
+---
+
+## 👨‍💻 Segment 10 Activity: The Tree That Goes Wrong **(10 minutes)**
+
+Pen and paper, or the whiteboard. No code.
+
+**Part A.** Insert these values into an empty Binary Search Tree, in this order:
 
 `50, 30, 70, 20, 40, 60, 80`
 
-**Rules:** the first value becomes the root. For every value after that, start at the root and go left if the value is smaller, right if it is larger, until you reach an empty spot.
+Rules: the first value becomes the root. For every value after that, start at the root, go left if it is smaller and right if it is larger, until you reach an empty spot.
 
-1. Draw the resulting tree.
-2. Identify the root, the leaves, and the level of each node.
-3. Trace the path to find `40`. How many comparisons did it take?
-4. Trace the path to find `65`. What happens, and how do you know it is not in the tree?
-5. **Discussion:** now insert `10, 20, 30, 40, 50` into a fresh tree, in that order. What shape do you get, and why is that a problem?
+1. Draw the tree.
+2. How many comparisons does it take to find `40`?
+3. Trace the path for `65`. What happens, and how do you know it is not in the tree?
+
+**Part B — the important half.** Now start again with an empty tree and insert:
+
+`10, 20, 30, 40, 50`
+
+4. Draw it. What shape do you get?
+5. How many comparisons to find `50` now? Compare that to Part A.
+6. **Discussion:** you have just built a tree that is really a linked list. Every search is O(n). What kind of real data arrives already sorted, and how often do you think that happens?
+
+> **Instructor note:** Part B is the point of the activity — cut Part A short if time is tight. The answer to question 6 is the good one: sorted data is not an edge case, it is the *normal* case. Database rows come out ordered by ID, log entries arrive by timestamp, imported CSVs are usually sorted. Then close it: this is precisely why Java uses a self-balancing Red-Black Tree rather than a plain BST. The degenerate case is not rare, so it has to be engineered away.
+
+---
+
+## Segment 11: Where This Shows Up in AI Engineering
+
+Everything in this lesson has been one idea: **discard most of the search space at every step.** That idea is not a Java curiosity. It is the reason modern AI systems can retrieve anything at all.
+
+When you build a RAG system, your documents become **embeddings** — vectors, often 1,536 numbers each. Retrieval means finding the vectors closest to your query vector. If you have ten million embeddings, comparing the query against every one of them is a linear search: O(n), and far too slow to sit inside a chat response.
+
+So vector databases — Pinecone, Chroma, Weaviate, pgvector, FAISS — do not compare against everything. They use an index called **HNSW: Hierarchical Navigable Small World.**
+
+The mental model is an express train network:
+
+- The **top layer** has very few stops, spaced far apart. One hop covers enormous distance.
+- Each **layer down** has more stops and finer spacing.
+- The **bottom layer** contains every vector.
+
+A search starts at the top, travels to roughly the right region in a few long hops, then drops down a layer and refines. Each layer discards most of what remains — exactly what Binary Search did to an array and what a BST does to a tree, generalised from two branches to a graph of many.
+
+| Java | Vector database |
+|------|-----------------|
+| Sorted array + Binary Search | Flat index + brute force scan |
+| Binary Search Tree | HNSW graph |
+| Red-Black self-balancing | Index tuning parameters (`M`, `efConstruction`) |
+| O(log n) lookup | Approximate nearest neighbour search |
+
+There is one honest difference worth naming. A BST lookup is **exact** — you either find the key or you prove it is absent. HNSW is **approximate**: it very occasionally misses a true nearest neighbour in exchange for being orders of magnitude faster. Every vector database exposes a knob controlling that trade-off. When you tune retrieval quality in a RAG pipeline, that knob is what you are actually turning, and now you know what it is doing underneath.
+
+> **Instructor note:** Ninety seconds of speaking, then the table, then the exact-versus-approximate point. You do not need to know how the HNSW graph is constructed and neither do they at this stage — if someone pushes, "that is a lesson in itself, look up the HNSW paper" is a completely legitimate answer. The goal here is only that they leave understanding that this module was not a computer science detour.
 
 ---
 
 ## Lesson Summary
 
-| Concept | What It Is | Key Point |
+| Concept | What it is | Key point |
 |---------|-----------|-----------|
-| Linear Search | Check each element in turn | Works on any data |
-| Binary Search | Discard half the data at each step | Requires sorted data |
-| Bubble Sort | Repeatedly swap neighbouring elements | Teaching tool only, never production |
-| Java's real sorting | Dual-Pivot Quicksort and TimSort | Always use the built-in methods |
-| Tree | Hierarchical structure of nodes | No built-in Java class |
-| Binary Tree | Each node has at most two children | Foundation for BST |
-| Binary Search Tree | Left is smaller, right is larger | Powers TreeMap and TreeSet |
+| Big-O | Vocabulary for how work grows with data | O(1) and O(log n) scale; O(n²) does not |
+| Linear Search | Check each element in turn | O(n), works on any data |
+| Binary Search | Discard half at each step | O(log n), requires sorted data |
+| Bubble Sort | Swap neighbours repeatedly | O(n²), teaching tool only |
+| Java's real sorting | Dual-Pivot Quicksort and TimSort | Two algorithms, because objects need stability |
+| Tree | Hierarchical nodes and edges | No built-in Java class; Git is one |
+| Binary Search Tree | Left smaller, right larger | Powers TreeMap and TreeSet |
+| Red-Black Tree | A self-balancing BST | Prevents the degenerate straight-line case |
+| HNSW | Layered graph index | The same halving idea, applied to vector search |
 
----
-
-## Putting It Together
+### Putting It Together
 
 | What you need to do | Best choice | Why |
 |--------------------|-------------|-----|
-| Find something by key | HashMap | Direct lookup, no searching involved |
+| Find something by key | HashMap | O(1) direct lookup, no searching involved |
 | Search unsorted data | Linear Search | No alternative without sorting first |
-| Search sorted data repeatedly | Binary Search | Very few checks, even on huge datasets |
-| Keep data permanently sorted | TreeMap or TreeSet | A BST maintains order for you |
-| Sort a list once | `Collections.sort()` | TimSort, already optimised |
+| Search sorted data repeatedly | `Arrays.binarySearch()` | O(log n), tiny even on huge datasets |
+| Keep data permanently sorted | TreeMap or TreeSet | A Red-Black BST maintains order for you |
+| Sort a list of objects | `Collections.sort()` | TimSort, stable, already optimised |
 | Sort an array of numbers | `Arrays.sort()` | Dual-Pivot Quicksort |
 | Represent a hierarchy | Build it yourself with classes | Java provides no general Tree |
+| Search millions of embeddings | Vector DB with an HNSW index | Same halving idea, approximate and fast |
+
+### Key Takeaways
+
+- Big-O is vocabulary, not mathematics. Learn the four common cases and what they mean at scale.
+- Binary Search on unsorted data fails silently — a wrong answer, not an error.
+- Sorting is expensive because of nested comparisons, which is why you never hand-write it.
+- Java uses two sorting algorithms because objects need stability and primitives do not.
+- Trees represent hierarchy. Java has no general Tree class, but you have been using Git's trees all module.
+- A BST discards half the tree at every step, which is what makes TreeMap and TreeSet efficient.
+- Sorted input would ruin a plain BST, so Java self-balances with a Red-Black Tree. Since Java 8, HashMap uses one too.
+- The same idea scales all the way up to vector search in production AI systems.
 
 ---
 
-### Key Takeaways
-- Linear Search works anywhere. Binary Search is dramatically faster but demands sorted data.
-- Binary Search on unsorted data fails silently — it returns a wrong answer rather than an error.
-- Sorting is expensive because of nested comparisons, which is why you should never hand-write it.
-- Java uses Dual-Pivot Quicksort for primitives and TimSort for objects. Both are far better than anything written by hand.
-- Trees represent hierarchy. Java has no general Tree class, so you build your own if you need one.
-- A Binary Search Tree discards half the tree at every step, which is what makes TreeMap and TreeSet efficient.
-- TreeMap and TreeSet were doing this for you throughout Lesson 3.4.
+## Optional Practice (Not Assessed)
+
+For anyone preparing for technical interviews, where these do still come up:
+
+1. Implement Linear Search on `{3, 7, 11, 19, 24, 35, 48, 56, 72, 90}` to find `35`, counting the checks.
+2. Implement Binary Search on the same array for the same target, counting the checks. Compare.
+3. Search for `100` with both. Observe how each one terminates.
+4. Implement Bubble Sort on `{45, 12, 89, 33, 67}`. Expected output: `12 33 45 67 89`.
+5. Run your Binary Search on the sorted result to find `45`.
+
+These are interview preparation, not production practice. Use `Arrays.sort()` and `Arrays.binarySearch()` in real work, always.
 
 ---
 
