@@ -26,10 +26,10 @@ By the end of this lesson, students will be able to:
 
 ---
 
-## Running Order
+## Lesson Outline
 
-| # | Segment | Time |
-|---|---------|------|
+| # | Topic | Time |
+|---|-------|------|
 | 1 | Big-O as vocabulary | 5 min |
 | 2 | Linear Search | 5 min |
 | 3 | Binary Search | 10 min |
@@ -43,11 +43,11 @@ By the end of this lesson, students will be able to:
 | 11 | Where this shows up in AI engineering | 10 min |
 | 12 | Summary and wrap | 8 min |
 
-Total: 110 minutes, leaving buffer for questions.
+Timings are approximate. The session runs about two hours including questions.
 
 ---
 
-## Segment 1: Big-O as Vocabulary
+## Part 1: Big-O as Vocabulary
 
 Before anything else, four pieces of vocabulary. You will hear these in every technical interview you ever sit, so learn them as language, not as mathematics.
 
@@ -66,11 +66,11 @@ The practical reading:
 - **O(n)** is usually fine, and is often unavoidable.
 - **O(n²)** is where systems die. Ten times the data means a hundred times the work.
 
-> **Instructor note:** Do not derive anything. Read the table, give the ten-times-the-data reading of each row, and move on. This slide exists so that when they hear "that's O(n squared)" later in the lesson, the phrase already means something.
+> **Worth noting:** There is no mathematics to memorise here. Read each row as "if I give this ten times more data, what happens?" and that is the whole of it. You only need these four terms to mean something to you when they come up later in this lesson, and in interviews.
 
 ---
 
-## Segment 2: Linear Search
+## Part 2: Linear Search
 
 An **algorithm** is a step-by-step procedure for solving a problem. We start with the most common problem of all: finding something.
 
@@ -112,7 +112,7 @@ The `break` matters. Without it the loop keeps running after the element is foun
 
 ---
 
-## Segment 3: Binary Search
+## Part 3: Binary Search
 
 **Binary Search** is dramatically faster, but it comes with one strict condition: **the data must already be sorted.**
 
@@ -182,11 +182,11 @@ graph TD
 
 In practice you would call `Arrays.binarySearch(numbers, target)` rather than write this. We are reading it so that the *idea* — halve the problem at every step — is in your head, because it comes back three more times in this lesson.
 
-> **Instructor note:** Trace the diagram out loud, one step at a time, saying "and now half the data is gone" at each arrow. That phrase is the spine of the whole lesson. Repeat it deliberately.
+> **Worth noting:** Follow the diagram one arrow at a time and say to yourself at each step: *and now half the data is gone.* That single phrase is the spine of this entire lesson. It comes back in sorting, in trees, and at the very end in vector search.
 
 ---
 
-## Segment 4: Counting the Steps
+## Part 4: Counting the Steps
 
 Forget the theory. Just count.
 
@@ -203,11 +203,11 @@ Every check removes half of what remains, so going from a million records to a b
 
 This is the payoff for keeping data sorted. Sorting has a cost, which we will look at next, but if you search that data repeatedly you earn it back many times over.
 
-> **Instructor note:** This is the strongest moment in the lesson. Do not rush it. Put the table up, stay quiet for a beat, then ask the room: "How many checks do you think a billion records takes?" Let them guess high. The reveal does the teaching for you.
+> **Worth noting:** Before you read the right-hand column, guess. Most people guess somewhere in the thousands for a billion records. The gap between your guess and the real answer is the reason this notation is worth knowing at all.
 
 ---
 
-## Segment 5: Bubble Sort, and What We Are Deliberately Not Teaching
+## Part 5: Bubble Sort, and What We Are Deliberately Not Teaching
 
 Sorting arranges data into order. It matters because so many other operations — Binary Search included — depend on it.
 
@@ -262,7 +262,7 @@ Double the data, quadruple the work. This is why nobody sorts real data this way
 
 ---
 
-## Segment 6: What Java Actually Uses
+## Part 6: What Java Actually Uses
 
 In Lesson 3.4 you sorted a list like this:
 
@@ -302,11 +302,11 @@ For objects that matters enormously — it is what lets you sort by price, then 
 
 **The practical takeaway:** always use `Arrays.sort()` or `Collections.sort()`. Understanding Bubble Sort tells you *why* sorting costs something. It does not mean you should ever write your own.
 
-> **Instructor note:** The stability point is the one that makes people sit up, because it explains a behaviour they can immediately use — chained sorting. If you have time for a live demo, sort a list of records by one field, then by another, and show the first ordering surviving inside the second.
+> **Try this yourself:** Take a list of records, sort it by one field, then sort the result by a second field. Print it after each step. You will see the first ordering surviving inside the second — that is stability doing real work, and it is a technique you will use constantly.
 
 ---
 
-## Segment 7: Trees and Binary Trees
+## Part 7: Trees and Binary Trees
 
 In Lesson 3.4 we covered two of the three categories of data structure. Here is the full picture:
 
@@ -373,7 +373,7 @@ That single restriction makes the structure predictable, and predictable structu
 
 ---
 
-## Segment 8: Binary Search Trees, TreeMap and TreeSet
+## Part 8: Binary Search Trees, TreeMap and TreeSet
 
 A **Binary Search Tree** (BST) is a Binary Tree with one extra rule, holding at every node:
 
@@ -451,7 +451,7 @@ Why that matters becomes obvious in the next activity, so hold the question for 
 
 ---
 
-## Segment 9: The BST Hiding Inside HashMap
+## Part 9: The BST Hiding Inside HashMap
 
 One more connection, and it ties both lessons together.
 
@@ -463,13 +463,13 @@ Since **Java 8**, when a single bucket exceeds eight entries, Java converts that
 
 So the `HashMap` you have been using since Lesson 3.4 contains, in its worst moments, exactly the structure we just spent twenty minutes on.
 
-> **Instructor note:** This is a five-minute segment and the payoff is the last sentence. Deliver it as the loop closing: hashing, trees, balancing and Big-O all turn out to be one story rather than four topics. If anyone asks about the threshold: eight entries to convert to a tree, six to convert back, and it only applies when the map has at least 64 buckets. You will not be asked, but it is there if you are.
+> **The detail, if you want it:** Java converts a bucket to a tree once it holds eight entries, converts it back down at six, and only does either when the map has at least 64 buckets. You will never need to tune this. It is worth knowing only because it shows that hashing, trees, balancing and Big-O are one story rather than four separate topics.
 
 ---
 
-## 👨‍💻 Segment 10 Activity: The Tree That Goes Wrong **(10 minutes)**
+## 👨‍💻 Part 10 Activity: The Tree That Goes Wrong **(10 minutes)**
 
-Pen and paper, or the whiteboard. No code.
+Pen and paper. No code for this one.
 
 **Part A.** Insert these values into an empty Binary Search Tree, in this order:
 
@@ -489,11 +489,11 @@ Rules: the first value becomes the root. For every value after that, start at th
 5. How many comparisons to find `50` now? Compare that to Part A.
 6. **Discussion:** you have just built a tree that is really a linked list. Every search is O(n). What kind of real data arrives already sorted, and how often do you think that happens?
 
-> **Instructor note:** Part B is the point of the activity — cut Part A short if time is tight. The answer to question 6 is the good one: sorted data is not an edge case, it is the *normal* case. Database rows come out ordered by ID, log entries arrive by timestamp, imported CSVs are usually sorted. Then close it: this is precisely why Java uses a self-balancing Red-Black Tree rather than a plain BST. The degenerate case is not rare, so it has to be engineered away.
+> **Where this is going:** Part B is the important half. When you answer question 6, think about where your data actually comes from — database rows arrive ordered by ID, log entries arrive by timestamp, imported CSVs are usually sorted already. Sorted input is not an edge case, it is the normal case. That is precisely why Java uses a self-balancing Red-Black Tree rather than a plain BST: the failure you just drew is common enough that it had to be engineered away.
 
 ---
 
-## Segment 11: Where This Shows Up in AI Engineering
+## Part 11: Where This Shows Up in AI Engineering
 
 Everything in this lesson has been one idea: **discard most of the search space at every step.** That idea is not a Java curiosity. It is the reason modern AI systems can retrieve anything at all.
 
@@ -518,7 +518,7 @@ A search starts at the top, travels to roughly the right region in a few long ho
 
 There is one honest difference worth naming. A BST lookup is **exact** — you either find the key or you prove it is absent. HNSW is **approximate**: it very occasionally misses a true nearest neighbour in exchange for being orders of magnitude faster. Every vector database exposes a knob controlling that trade-off. When you tune retrieval quality in a RAG pipeline, that knob is what you are actually turning, and now you know what it is doing underneath.
 
-> **Instructor note:** Ninety seconds of speaking, then the table, then the exact-versus-approximate point. You do not need to know how the HNSW graph is constructed and neither do they at this stage — if someone pushes, "that is a lesson in itself, look up the HNSW paper" is a completely legitimate answer. The goal here is only that they leave understanding that this module was not a computer science detour.
+> **How far to take this:** You do not need to know how an HNSW graph is constructed to work with one, and nobody expects you to at this stage. What matters is that you recognise the pattern when you meet it in a vector database's documentation. If you want to go further, the HNSW paper by Malkov and Yashunin is the original source and is readable.
 
 ---
 
