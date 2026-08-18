@@ -179,6 +179,24 @@ In practice you would call `Arrays.binarySearch(numbers, target)` rather than wr
 > **Worth noting:** Follow the diagram one arrow at a time and say to yourself at each step: *and now half the data is gone.* That single phrase is the spine of this entire lesson. It comes back in sorting, in trees, and at the very end in vector search.
 
 ---
+### The built-in version
+ 
+You would not write that loop in real code. Java provides it — but the array must be sorted first.
+ 
+```java
+int[] numbers = {45, 2, 38, 16, 5};
+ 
+Arrays.sort(numbers);                                    // [2, 5, 16, 38, 45]
+System.out.println(Arrays.binarySearch(numbers, 38));    // 3
+System.out.println(Arrays.binarySearch(numbers, 20));    // -3, meaning not found
+```
+ 
+`Arrays.sort()` sorts in place. A negative result from `binarySearch()` means the value is absent.
+ 
+For a `List`, use `Collections.sort()` and `Collections.binarySearch()` instead.
+ 
+---
+
 
 ## Part 4: Counting the Steps
 
