@@ -31,19 +31,21 @@ By the end of this lesson, students will be able to:
 | # | Topic | Time |
 |---|-------|------|
 | 1 | Big-O as vocabulary | 5 min |
-| 2 | Linear Search | 5 min |
-| 3 | Binary Search | 10 min |
-| 4 | Counting the steps | 10 min |
-| 5 | Bubble Sort, and what we are deliberately not teaching | 10 min |
+| 2 | Linear Search | 3 min |
+| 3 | Binary Search | 8 min |
+| 4 | Counting the steps | 7 min |
+| 5 | Bubble Sort, and what we are deliberately not teaching | 5 min |
 | 6 | What Java actually uses | 15 min |
 | 7 | Trees and Binary Trees | 12 min |
-| 8 | Binary Search Trees, TreeMap and TreeSet | 20 min |
+| 8 | Binary Search Trees, TreeMap and TreeSet | 18 min |
 | 9 | The BST hiding inside HashMap | 5 min |
 | 10 | Activity: the tree that goes wrong | 10 min |
-| 11 | Where this shows up in AI engineering | 10 min |
+| 11 | Where this shows up in AI engineering | 12 min |
 | 12 | Summary and wrap | 8 min |
 
-Timings are approximate. The session runs about two hours including questions.
+That totals about 108 minutes, leaving room for questions across a two hour session.
+
+> **Note on pacing:** Parts 6, 8 and 11 are the substance of this lesson. If time gets tight, compress Parts 2, 4 and 9 rather than rushing the end. Part 11 in particular should not be dropped — it is what connects everything here to the work you actually do.
 
 ---
 
@@ -82,24 +84,20 @@ A **Linear Search** checks each element in turn until it finds the target or run
 - Cost: **O(n)**.
 
 ```java
-public class LinearSearchDemo {
-  public static void main(String[] args) {
-    int[] numbers = {4, 8, 15, 16, 23, 42};
-    int target = 15;
-    boolean found = false;
+int[] numbers = {4, 8, 15, 16, 23, 42};
+int target = 15;
+boolean found = false;
 
-    for (int i = 0; i < numbers.length; i++) {
-      if (numbers[i] == target) {
-        System.out.println("Element found at index: " + i);
-        found = true;
-        break;
-      }
-    }
-
-    if (!found) {
-      System.out.println("Element not found in the array.");
-    }
+for (int i = 0; i < numbers.length; i++) {
+  if (numbers[i] == target) {
+    System.out.println("Element found at index: " + i);
+    found = true;
+    break;
   }
+}
+
+if (!found) {
+  System.out.println("Element not found in the array.");
 }
 ```
 
@@ -108,7 +106,7 @@ public class LinearSearchDemo {
 Element found at index: 2
 ```
 
-The `break` matters. Without it the loop keeps running after the element is found, doing work for no reason. That is the single most common beginner bug in this pattern.
+Nothing here should be new. The one detail worth naming is the `break` — without it the loop keeps running after the element is found, doing work for no reason. That is the single most common beginner bug in this pattern.
 
 ---
 
@@ -126,33 +124,29 @@ Instead of checking every element, it looks at the middle and throws away half t
 5. Repeat until found, or until nothing is left.
 
 ```java
-public class BinarySearchDemo {
-  public static void main(String[] args) {
-    int[] numbers = {2, 5, 8, 12, 16, 23, 38, 45}; // must be sorted
-    int target = 16;
+int[] numbers = {2, 5, 8, 12, 16, 23, 38, 45}; // must be sorted
+int target = 16;
 
-    int left = 0;
-    int right = numbers.length - 1;
-    boolean found = false;
+int left = 0;
+int right = numbers.length - 1;
+boolean found = false;
 
-    while (left <= right) {
-      int middle = (left + right) / 2;
+while (left <= right) {
+  int middle = (left + right) / 2;
 
-      if (numbers[middle] == target) {
-        System.out.println("Element found at index: " + middle);
-        found = true;
-        break;
-      } else if (numbers[middle] < target) {
-        left = middle + 1;   // search the right half
-      } else {
-        right = middle - 1;  // search the left half
-      }
-    }
-
-    if (!found) {
-      System.out.println("Element not found.");
-    }
+  if (numbers[middle] == target) {
+    System.out.println("Element found at index: " + middle);
+    found = true;
+    break;
+  } else if (numbers[middle] < target) {
+    left = middle + 1;   // search the right half
+  } else {
+    right = middle - 1;  // search the left half
   }
+}
+
+if (!found) {
+  System.out.println("Element not found.");
 }
 ```
 
@@ -213,36 +207,22 @@ Sorting arranges data into order. It matters because so many other operations �
 
 **Bubble Sort** is the simplest sorting algorithm to understand. It compares each pair of neighbouring elements and swaps them if they are the wrong way round. After each full pass, the largest remaining value has moved into place at the end.
 
+Look at the **shape** of this, not the detail:
+
 ```java
-public class BubbleSortDemo {
-  public static void main(String[] args) {
-    int[] numbers = {5, 3, 8, 4, 2};
-    int n = numbers.length;
-
-    for (int i = 0; i < n - 1; i++) {
-      for (int j = 0; j < n - i - 1; j++) {
-        if (numbers[j] > numbers[j + 1]) {
-          int temp = numbers[j];
-          numbers[j] = numbers[j + 1];
-          numbers[j + 1] = temp;
-        }
-      }
-    }
-
-    System.out.print("Sorted array: ");
-    for (int num : numbers) {
-      System.out.print(num + " ");
+for (int i = 0; i < n - 1; i++) {
+  for (int j = 0; j < n - i - 1; j++) {          // a loop inside a loop
+    if (numbers[j] > numbers[j + 1]) {
+      int temp = numbers[j];
+      numbers[j] = numbers[j + 1];
+      numbers[j + 1] = temp;
     }
   }
 }
+// {5, 3, 8, 4, 2}  becomes  2 3 4 5 8
 ```
 
-**Output:**
-```
-Sorted array: 2 3 4 5 8
-```
-
-Look at the shape of the code, not the detail. A **loop inside a loop**. That is O(n²), and here is what it costs:
+A **loop inside a loop**. That is O(n²), and here is what it costs:
 
 | Number of items | Roughly how many comparisons |
 |-----------------|------------------------------|
@@ -258,7 +238,7 @@ Double the data, quadruple the work. This is why nobody sorts real data this way
 >
 > Those exercises exist to train you for a world where you write these yourself, and you will not. Java's implementations are the product of decades of tuning by specialists, and hand-rolling your own is a code review failure, not a flex. What matters is that you can look at a problem, know which structure to reach for, and know roughly what it costs. That judgement is the skill. The implementation is a solved problem.
 >
-> If you want the practice for interview preparation, the optional exercises are posted separately. They are genuinely useful for that purpose and genuinely useless for production work. Know which one you are doing.
+> If you want the practice for interview preparation, the optional exercises are posted at the end of this lesson. They are genuinely useful for that purpose and genuinely useless for production work. Know which one you are doing.
 
 ---
 
@@ -267,8 +247,8 @@ Double the data, quadruple the work. This is why nobody sorts real data this way
 In Lesson 3.4 you sorted a list like this:
 
 ```java
-Collections.sort(products);
-products.sort(Comparator.comparing(Product::price));
+Collections.sort(catalogue);
+catalogue.sort(Comparator.comparing(CatalogueItem::price));
 ```
 
 One line, and it worked. So what is running underneath? Not Bubble Sort. Java uses **two** different, heavily optimised algorithms, and which one you get depends on what you are sorting.
@@ -279,49 +259,48 @@ Standard Quicksort picks one value as a pivot and splits the data into "smaller 
 
 Java's version picks **two** pivots and splits into three groups instead of two. Fewer passes, fewer comparisons, better use of the processor cache. It was contributed to the JDK in 2009 and measurably beat the previous implementation.
 
-### For objects — `List<Product>`, `String[]` — TimSort
+### For objects — `List<CatalogueItem>`, `String[]` — TimSort
 
 TimSort is built on a practical observation: real-world data is rarely random. It usually contains stretches that are already in order — timestamps, IDs, alphabetised names. TimSort finds those stretches, called **runs**, and merges them intelligently instead of sorting from scratch.
 
 On data that is already sorted, TimSort finishes in a single pass. It was designed for Python in 2002 and adopted by Java in Java 7.
 
 ### Two words worth unpacking
- 
+
 Both descriptions above lean on a term we have not defined. Neither needs a full algorithm to make sense.
- 
+
 **A pivot is just a value you split around.** Take `[7, 62, 40, 15, 88]` and pick `40` as the pivot. Everything smaller goes left, everything larger goes right:
- 
+
 ```
 [7, 15]   40   [62, 88]
 ```
- 
+
 Nothing is sorted yet. But `7` will never again be compared against `88`, because they are now in different groups. You have cut the problem into two smaller problems, and you repeat on each side. That is the halving idea again, arriving from a different direction.
- 
+
 Java's version picks two pivots instead of one, producing three groups rather than two — smaller, middle, larger — which is why it takes fewer passes.
- 
+
 **Merging is combining two already-sorted lists into one.** Walk both from the front and always take the smaller of the two front items:
- 
+
 ```
 [2, 9]  and  [4, 6]
- 
+
 take 2  →  2
 take 4  →  2, 4
 take 6  →  2, 4, 6
 take 9  →  2, 4, 6, 9
 ```
- 
+
 One pass through both lists, and no comparison is ever wasted. This works *only* because both inputs were already sorted.
- 
+
 That is TimSort's whole insight. Real data arrives containing stretches that are already in order, so TimSort finds those stretches and merges them rather than sorting from nothing. It starts the job halfway done.
- 
+
 > **How far to take this:** You do not need to be able to implement either algorithm, and you will not be asked to. Knowing what a pivot is and what merging means is enough to read the documentation, understand a stack trace, and hold your own in a technical conversation. If you want the full algorithms, they are well covered everywhere — but as Part 5 said, writing your own is not the job.
- 
 
 ### Why two algorithms?
 
 Because they optimise for different things, and the difference is **stability**.
 
-A stable sort preserves the original relative order of equal elements. If two products both cost $20, a stable sort guarantees they come out in the same order they went in. TimSort guarantees this. Quicksort does not.
+A stable sort preserves the original relative order of equal elements. If two items both cost $20, a stable sort guarantees they come out in the same order they went in. TimSort guarantees this. Quicksort does not.
 
 For objects that matters enormously — it is what lets you sort by price, then sort by category, and still have the price order preserved within each category. For primitives it is meaningless: one `5` is indistinguishable from another `5`, so there is nothing to preserve.
 
@@ -380,14 +359,25 @@ graph TD
 Open any repository you have worked on in this module and run:
 
 ```bash
-git cat-file -p HEAD
+git cat-file -p "HEAD^{tree}"
 ```
 
-Git does not store your project as a list of files. Every commit points to a **tree object**, which represents a directory. That tree points to more tree objects for subdirectories, and to **blob objects** for file contents. It is a hierarchy of nodes and edges — a tree in exactly the sense we have just defined.
+Git does not store your project as a list of files. Every commit points to a **tree object**, which represents a directory. That tree points to more tree objects for subdirectories, and to **blob objects** for file contents. The command above prints that tree directly — you will see one line per file and folder, each tagged `blob` or `tree`:
 
-And the commits themselves form a second non-linear structure. Each commit points back to its parent, which is why `git log --graph` draws branches and merges rather than a straight line, and why a merge commit is simply a node with two parents.
+```
+100644 blob ce013625030ba8dba906f756967f9e9ca394464a    README.md
+040000 tree 5f44ca78e0a923001c902fe64f8803a74830a167    src
+```
 
-So when you branched, merged and resolved conflicts in Module 3, you were navigating a non-linear data structure. You just were not calling it that.
+`README.md` is a blob — file contents. `src` is another tree — a directory, with its own children beneath it.
+
+> **Note:** keep the quotes around `"HEAD^{tree}"`. On Mac, zsh treats the braces as special characters and the command fails without them.
+
+It is a hierarchy of nodes and edges: a tree in exactly the sense we have just defined.
+
+The commits themselves form a second non-linear structure. Each commit points back to its parent, which is why `git log --graph` draws branches and merges rather than a straight line, and why a merge commit is simply a node with two parents.
+
+So if you have branched, merged or resolved a conflict at any point, you were navigating a non-linear data structure. You just were not calling it that.
 
 ### Trees in Java
 
@@ -458,16 +448,16 @@ That should feel familiar. It is exactly what Binary Search did to a sorted arra
 Now the connection back to Lesson 3.4.
 
 ```java
-TreeMap<String, Integer> scores = new TreeMap<>();
-scores.put("Charlie", 78);
-scores.put("Alice", 85);
-scores.put("Bob", 92);
+TreeMap<String, Integer> rankings = new TreeMap<>();
+rankings.put("Charlie", 78);
+rankings.put("Alice", 85);
+rankings.put("Bob", 92);
 
-System.out.println(scores);
+System.out.println(rankings);
 // {Alice=85, Bob=92, Charlie=78} — sorted, without you doing anything
 ```
 
-When you call `scores.get("Bob")`, Java walks a Binary Search Tree. It compares "Bob" against the value at each node and goes left or right, discarding half the remaining entries every time.
+When you call `rankings.get("Bob")`, Java walks a Binary Search Tree. It compares "Bob" against the value at each node and goes left or right, discarding half the remaining entries every time.
 
 This explains behaviour you already saw in 3.4:
 
@@ -587,7 +577,7 @@ There is one honest difference worth naming. A BST lookup is **exact** — you e
 - Binary Search on unsorted data fails silently — a wrong answer, not an error.
 - Sorting is expensive because of nested comparisons, which is why you never hand-write it.
 - Java uses two sorting algorithms because objects need stability and primitives do not.
-- Trees represent hierarchy. Java has no general Tree class, but you have been using Git's trees all module.
+- Trees represent hierarchy. Java has no general Tree class, but Git stores your repository as one.
 - A BST discards half the tree at every step, which is what makes TreeMap and TreeSet efficient.
 - Sorted input would ruin a plain BST, so Java self-balances with a Red-Black Tree. Since Java 8, HashMap uses one too.
 - The same idea scales all the way up to vector search in production AI systems.
