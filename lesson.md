@@ -285,6 +285,38 @@ TimSort is built on a practical observation: real-world data is rarely random. I
 
 On data that is already sorted, TimSort finishes in a single pass. It was designed for Python in 2002 and adopted by Java in Java 7.
 
+### Two words worth unpacking
+ 
+Both descriptions above lean on a term we have not defined. Neither needs a full algorithm to make sense.
+ 
+**A pivot is just a value you split around.** Take `[7, 62, 40, 15, 88]` and pick `40` as the pivot. Everything smaller goes left, everything larger goes right:
+ 
+```
+[7, 15]   40   [62, 88]
+```
+ 
+Nothing is sorted yet. But `7` will never again be compared against `88`, because they are now in different groups. You have cut the problem into two smaller problems, and you repeat on each side. That is the halving idea again, arriving from a different direction.
+ 
+Java's version picks two pivots instead of one, producing three groups rather than two — smaller, middle, larger — which is why it takes fewer passes.
+ 
+**Merging is combining two already-sorted lists into one.** Walk both from the front and always take the smaller of the two front items:
+ 
+```
+[2, 9]  and  [4, 6]
+ 
+take 2  →  2
+take 4  →  2, 4
+take 6  →  2, 4, 6
+take 9  →  2, 4, 6, 9
+```
+ 
+One pass through both lists, and no comparison is ever wasted. This works *only* because both inputs were already sorted.
+ 
+That is TimSort's whole insight. Real data arrives containing stretches that are already in order, so TimSort finds those stretches and merges them rather than sorting from nothing. It starts the job halfway done.
+ 
+> **How far to take this:** You do not need to be able to implement either algorithm, and you will not be asked to. Knowing what a pivot is and what merging means is enough to read the documentation, understand a stack trace, and hold your own in a technical conversation. If you want the full algorithms, they are well covered everywhere — but as Part 5 said, writing your own is not the job.
+ 
+
 ### Why two algorithms?
 
 Because they optimise for different things, and the difference is **stability**.
