@@ -32,20 +32,19 @@ By the end of this lesson, students will be able to:
 |---|-------|------|
 | 1 | Big-O as vocabulary | 5 min |
 | 2 | Linear Search | 3 min |
-| 3 | Binary Search | 8 min |
+| 3 | Binary Search, and the built-in version | 10 min |
 | 4 | Counting the steps | 7 min |
 | 5 | Bubble Sort, and what we are deliberately not teaching | 5 min |
 | 6 | What Java actually uses | 15 min |
-| 7 | Trees and Binary Trees | 12 min |
+| 7 | Trees and Binary Trees | 10 min |
 | 8 | Binary Search Trees, TreeMap and TreeSet | 18 min |
 | 9 | The BST hiding inside HashMap | 5 min |
-| 10 | Activity: the tree that goes wrong | 10 min |
-| 11 | Where this shows up in AI engineering | 12 min |
-| 12 | Summary and wrap | 8 min |
+| 10 | Where this shows up in AI engineering | 12 min |
+| 11 | Summary and wrap | 8 min |
 
-That totals about 108 minutes, leaving room for questions across a two hour session.
+That totals about 95 minutes, leaving comfortable room for questions across a two hour session.
 
-> **Note on pacing:** Parts 6, 8 and 11 are the substance of this lesson. If time gets tight, compress Parts 2, 4 and 9 rather than rushing the end. Part 11 in particular should not be dropped — it is what connects everything here to the work you actually do.
+> **Note on pacing:** Parts 6, 8 and 10 are the substance of this lesson. If time gets tight, compress Parts 2, 4 and 9 rather than rushing the end. Part 10 in particular should not be dropped — it is what connects everything here to the work you actually do.
 
 ---
 
@@ -179,24 +178,24 @@ In practice you would call `Arrays.binarySearch(numbers, target)` rather than wr
 > **Worth noting:** Follow the diagram one arrow at a time and say to yourself at each step: *and now half the data is gone.* That single phrase is the spine of this entire lesson. It comes back in sorting, in trees, and at the very end in vector search.
 
 ---
+
 ### The built-in version
- 
+
 You would not write that loop in real code. Java provides it — but the array must be sorted first.
- 
+
 ```java
 int[] numbers = {45, 2, 38, 16, 5};
- 
+
 Arrays.sort(numbers);                                    // [2, 5, 16, 38, 45]
 System.out.println(Arrays.binarySearch(numbers, 38));    // 3
-System.out.println(Arrays.binarySearch(numbers, 20));    // -3, meaning not found
+System.out.println(Arrays.binarySearch(numbers, 20));    // -4, meaning not found
 ```
- 
-`Arrays.sort()` sorts in place. A negative result from `binarySearch()` means the value is absent.
- 
-For a `List`, use `Collections.sort()` and `Collections.binarySearch()` instead.
- 
----
 
+`Arrays.sort()` sorts in place. A negative result from `binarySearch()` means the value is absent.
+
+For a `List`, use `Collections.sort()` and `Collections.binarySearch()` instead.
+
+---
 
 ## Part 4: Counting the Steps
 
@@ -372,31 +371,6 @@ graph TD
     style T1 fill:#e8f5e9
 ```
 
-### You have been using a tree all module
-
-Open any repository you have worked on in this module and run:
-
-```bash
-git cat-file -p "HEAD^{tree}"
-```
-
-Git does not store your project as a list of files. Every commit points to a **tree object**, which represents a directory. That tree points to more tree objects for subdirectories, and to **blob objects** for file contents. The command above prints that tree directly — you will see one line per file and folder, each tagged `blob` or `tree`:
-
-```
-100644 blob ce013625030ba8dba906f756967f9e9ca394464a    README.md
-040000 tree 5f44ca78e0a923001c902fe64f8803a74830a167    src
-```
-
-`README.md` is a blob — file contents. `src` is another tree — a directory, with its own children beneath it.
-
-> **Note:** keep the quotes around `"HEAD^{tree}"`. On Mac, zsh treats the braces as special characters and the command fails without them.
-
-It is a hierarchy of nodes and edges: a tree in exactly the sense we have just defined.
-
-The commits themselves form a second non-linear structure. Each commit points back to its parent, which is why `git log --graph` draws branches and merges rather than a straight line, and why a merge commit is simply a node with two parents.
-
-So if you have branched, merged or resolved a conflict at any point, you were navigating a non-linear data structure. You just were not calling it that.
-
 ### Trees in Java
 
 Unlike `ArrayList` or `HashMap`, **Java has no built-in `Tree` class**. There is nothing to import.
@@ -487,7 +461,11 @@ This explains behaviour you already saw in 3.4:
 
 Java does not use a plain BST. It uses a **Red-Black Tree**, which is a BST that rebalances itself as you insert.
 
-Why that matters becomes obvious in the next activity, so hold the question for now. The short version: without rebalancing, certain insertion orders produce a tree with no branching at all, and every performance guarantee collapses. The Red-Black rules prevent that automatically. You never see any of it — you just get reliable O(log n) whatever order your data arrives in.
+Why does that matter? Consider what happens if you insert `10, 20, 30, 40, 50` into a plain BST, in that order. Every value is larger than the last, so every one goes right. You do not get a tree — you get a straight line, which is a linked list wearing a tree costume. Every search is back to O(n), and every guarantee is gone.
+
+And this is not a rare edge case. Sorted input is the **normal** case: database rows arrive ordered by ID, log entries arrive by timestamp, imported CSV files are usually sorted already.
+
+The Red-Black rules prevent it automatically by rotating nodes as you insert, so the tree stays balanced whatever order your data arrives in. You never see any of it — you just get reliable O(log n).
 
 ---
 
@@ -507,33 +485,7 @@ So the `HashMap` you have been using since Lesson 3.4 contains, in its worst mom
 
 ---
 
-## 👨‍💻 Part 10 Activity: The Tree That Goes Wrong **(10 minutes)**
-
-Pen and paper. No code for this one.
-
-**Part A.** Insert these values into an empty Binary Search Tree, in this order:
-
-`50, 30, 70, 20, 40, 60, 80`
-
-Rules: the first value becomes the root. For every value after that, start at the root, go left if it is smaller and right if it is larger, until you reach an empty spot.
-
-1. Draw the tree.
-2. How many comparisons does it take to find `40`?
-3. Trace the path for `65`. What happens, and how do you know it is not in the tree?
-
-**Part B — the important half.** Now start again with an empty tree and insert:
-
-`10, 20, 30, 40, 50`
-
-4. Draw it. What shape do you get?
-5. How many comparisons to find `50` now? Compare that to Part A.
-6. **Discussion:** you have just built a tree that is really a linked list. Every search is O(n). What kind of real data arrives already sorted, and how often do you think that happens?
-
-> **Where this is going:** Part B is the important half. When you answer question 6, think about where your data actually comes from — database rows arrive ordered by ID, log entries arrive by timestamp, imported CSVs are usually sorted already. Sorted input is not an edge case, it is the normal case. That is precisely why Java uses a self-balancing Red-Black Tree rather than a plain BST: the failure you just drew is common enough that it had to be engineered away.
-
----
-
-## Part 11: Where This Shows Up in AI Engineering
+## Part 10: Where This Shows Up in AI Engineering
 
 Everything in this lesson has been one idea: **discard most of the search space at every step.** That idea is not a Java curiosity. It is the reason modern AI systems can retrieve anything at all.
 
@@ -571,7 +523,7 @@ There is one honest difference worth naming. A BST lookup is **exact** — you e
 | Binary Search | Discard half at each step | O(log n), requires sorted data |
 | Bubble Sort | Swap neighbours repeatedly | O(n²), teaching tool only |
 | Java's real sorting | Dual-Pivot Quicksort and TimSort | Two algorithms, because objects need stability |
-| Tree | Hierarchical nodes and edges | No built-in Java class; Git is one |
+| Tree | Hierarchical nodes and edges | No built-in Tree class in Java |
 | Binary Search Tree | Left smaller, right larger | Powers TreeMap and TreeSet |
 | Red-Black Tree | A self-balancing BST | Prevents the degenerate straight-line case |
 | HNSW | Layered graph index | The same halving idea, applied to vector search |
@@ -595,7 +547,7 @@ There is one honest difference worth naming. A BST lookup is **exact** — you e
 - Binary Search on unsorted data fails silently — a wrong answer, not an error.
 - Sorting is expensive because of nested comparisons, which is why you never hand-write it.
 - Java uses two sorting algorithms because objects need stability and primitives do not.
-- Trees represent hierarchy. Java has no general Tree class, but Git stores your repository as one.
+- Trees represent hierarchy. Java has no general Tree class, so you build one yourself if you need it.
 - A BST discards half the tree at every step, which is what makes TreeMap and TreeSet efficient.
 - Sorted input would ruin a plain BST, so Java self-balances with a Red-Black Tree. Since Java 8, HashMap uses one too.
 - The same idea scales all the way up to vector search in production AI systems.
